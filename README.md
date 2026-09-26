@@ -1,26 +1,46 @@
 # Open Observatory · Garden Ink
 
-An illustrated e-ink display for [Open Observatory](https://github.com/simonjgreen/OpenObservatory), powered by a Raspberry Pi Zero in a 3D-printed enclosure.
+An illustrated e-ink display for [Open Observatory](https://github.com/simonjgreen/OpenObservatory). A Raspberry Pi Zero, a printed frame, and an hourly account of what the garden has been up to.
 
-**Garden Ink expands on and depends on Open Observatory.** It provides an alternative indoor interface to the outdoor station's acoustic detections. Open Observatory handles recording, identification and review; Garden Ink reads its API and turns those records into an hourly garden journal.
+**Garden Ink is an expansion of Open Observatory and depends on it for its data.** The outdoor station does the listening, identification and review. This is another way to see what it heard, on a screen that can sit in the kitchen and get on with it.
 
 <p align="center"><img src="docs/images/garden-ink-device.jpg" width="540" alt="Garden Ink running on a portrait e-ink screen in its white printed Counterframe enclosure"></p>
 
-*The assembled device running the current no-clock layout. Bird illustrations accompany acoustic identifications; they are not photographs of observed birds.*
+*The assembled frame, running on the kitchen counter. The birds are illustrations of acoustic identifications.*
+
+## Where the idea came from
+
+I already had an [indoor LCD display for Open Observatory](https://github.com/simonjgreen/OpenObservatory#the-indoor-display): a small ESP32 touchscreen showing what the station was hearing outside. Then I saw [Fugleramme](https://github.com/arnegiacomo/fugleramme) on [Hacker News](https://news.ycombinator.com/item?id=49711544), and thought it'd be nice to have an e-ink version of my existing display. I mentioned [the LCD setup in the discussion](https://news.ycombinator.com/item?id=49719062).
+
+Credit to [arnegiacomo](https://github.com/arnegiacomo) and Fugleramme for the e-ink idea. I already had the listening side working; seeing their bird frame made me want to give it a different sort of display. Garden Ink is the result.
 
 ## What it does
 
 - Shows the latest qualifying identification from the last hour, alongside four other frequent species heard today.
-- Refreshes approximately every hour, with a date and clearly historical report/observation times.
-- Preserves local-midnight and daylight-saving boundaries, review decisions, source filtering and honest partial totals. Detection counts are records, not numbers of birds or visits.
+- Refreshes approximately every hour. It shows the date and when things were heard; a clock that is wrong for most of the hour would be fairly unhelpful.
+- Counts qualifying acoustic detections, with the station's review decisions and source filtering respected. Today starts at local midnight, including when the clocks change. If a scan is incomplete, the totals say so.
 - Uses a Waveshare 7.3-inch Spectra 6 **HAT (E)** in 480 × 800 portrait orientation.
 - Runs locally with cached artwork. Optional paid image generation is separate and disabled by default.
 
-The **Counterframe** enclosure is freestanding, screwless and designed for structural PLA, with one external power lead to the Pi. See the [mechanical guide](docs/design/MECHANICAL.md) before printing or wiring.
+One bird can produce plenty of detections, so the numbers aren't a count of individual birds or visits.
+
+## The frame
+
+The enclosure is called **Counterframe**. It stands on its own, prints in PLA and goes together without screws. There is one power lead into the Pi; everything else fits inside.
+
+These are the four printed parts laid out before assembly: the front bezel, internal carrier, rear cover and stand.
+
+![CAD render of the four Counterframe parts laid out for assembly: front bezel, internal carrier, rear cover and stand](hardware/counterframe/renders/components.png)
+
+With the back removed, you can see where the Pi, display driver and adapter sit, and how the ribbon and power cable fit around them.
+
+![CAD render with the back removed, showing the Pi Zero, display driver, adapter, ribbon cable and USB power route](hardware/counterframe/renders/routing.png)
+
+Both images are CAD renders from the [frame build guide](hardware/counterframe/README.md). The cable colours show the route through the case; use the [wiring table](docs/design/MECHANICAL.md#project-wiring) for the actual connections. The [OpenSCAD source and printable parts](hardware/counterframe/) are included.
 
 ## Requirements
 
-A running [Open Observatory station](https://github.com/simonjgreen/OpenObservatory) reachable from the display Pi is required for real observations. Garden Ink reads `/api/v1/health` and `/api/v1/detections`; it does not include or replace the station software. See the [API contract](display/docs/API_CONTRACT.md) for compatibility assumptions.
+You need a running [Open Observatory station](https://github.com/simonjgreen/OpenObservatory) that the display Pi can reach. Garden Ink reads its `/api/v1/health` and `/api/v1/detections` endpoints. The station is a separate installation; the [API contract](display/docs/API_CONTRACT.md) describes what the display expects from it.
 
 The display requires a Pi Zero, Raspberry Pi OS, the specific HAT (E) panel and SPI wiring. Other Waveshare variants are not interchangeable. Workstation previews require Python 3.9+, Pillow and DejaVu fonts, with no station or API key.
 
@@ -35,7 +55,7 @@ make test PYTHON=.venv/bin/python
 make preview PYTHON=.venv/bin/python
 ```
 
-On Debian/Ubuntu, install `python3-venv` and `fonts-dejavu-core` and `fonts-dejavu-extra` if needed. Open `local/previews/no-clock.png` for an actual 480 × 800 render using visibly labelled sample observations. These commands make no paid requests and do not touch GPIO or a live station.
+On Debian/Ubuntu, install `python3-venv`, `fonts-dejavu-core` and `fonts-dejavu-extra` if needed. Then open `local/previews/no-clock.png` to see the actual 480 × 800 output with labelled sample observations. You can try this without a panel, a live station or an API key.
 
 ## Install on a Pi
 
@@ -53,9 +73,9 @@ For an existing device, first follow [deployment and backup](docs/operations/DEP
 
 ## Artwork
 
-The original [robin](art_studio/reference/robin.png) defines the ink-and-wash style. The bundled 47 images provide coverage but are not yet a consistent final collection. The workstation studio has a 53-species catalogue and supports generation, visual review, approval and export. Import existing paid outputs before generating replacements.
+The original [robin](art_studio/reference/robin.png) is the reference for the ink-and-wash style. There are 47 bundled images, and the consistency still needs work. The workstation studio has a 53-species catalogue, with generation, review, approval and export. If you already have generated artwork, import it before paying to make it again.
 
-See the [artwork workflow](docs/artwork/WORKFLOW.md), [local recovery](docs/operations/LOCAL_RECOVERY.md) and [optional automatic artwork](docs/operations/AUTOART.md). Ordinary display operation needs no OpenAI key. Generation is explicitly opt-in and paid; a valid image file does not establish correct anatomy.
+The display works without an OpenAI key. New image generation is optional and paid, and the results need looking at: successfully producing a PNG says very little about whether the bird has the right number of legs. See the [artwork workflow](docs/artwork/WORKFLOW.md), [local recovery](docs/operations/LOCAL_RECOVERY.md) and [optional automatic artwork](docs/operations/AUTOART.md).
 
 ## Project layout
 
@@ -68,7 +88,7 @@ See the [artwork workflow](docs/artwork/WORKFLOW.md), [local recovery](docs/oper
 | `docs/` | Current architecture, setup, maintenance and design guidance |
 | `tests/`, `tools/` | Offline regression suites and development helpers |
 
-Start with the [documentation map](docs/INDEX.md). [Status and roadmap](docs/STATUS_AND_BACKLOG.md) separates implemented behaviour from outstanding verification and future work: content quality, refresh timing, readability, power consumption and art style.
+The [documentation map](docs/INDEX.md) points to the detail. Next I want to improve the content, refresh timing, readability, power consumption and artwork. [Status and roadmap](docs/STATUS_AND_BACKLOG.md) records what works and what still needs checking.
 
 ## Contributing and licensing
 
