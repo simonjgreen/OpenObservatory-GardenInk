@@ -1,0 +1,363 @@
+{
+  "design": "Counterframe 7.3 E6",
+  "version": "1.0 engineering prototype",
+  "units": "mm",
+  "source_sha256": "34c946f119a264dc4bc98583df0eebf2b7d1c89b5da3c7633f1d841d6fc7ab88",
+  "physically_print_or_fit_tested": false,
+  "hardware_basis": "Published outlines and mounting holes; approximate component/connector envelopes.",
+  "mesh_checks": {
+    "carrier.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "connected_bodies": 1,
+      "solid_volume_cm3": 24.1494,
+      "print_bounds_mm": [
+        [
+          -65.45,
+          -91.5,
+          -0.0
+        ],
+        [
+          65.45,
+          91.5,
+          13.975
+        ]
+      ],
+      "print_extents_mm": [
+        130.9,
+        183.0,
+        13.975
+      ],
+      "sha256": "f773bed305959f7547cda90b2e6b8560c593c26f3403adc61d4c8d9b0c0574ad",
+      "passed": true
+    },
+    "coupon_holes.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "connected_bodies": 1,
+      "solid_volume_cm3": 2.2245,
+      "print_bounds_mm": [
+        [
+          -32.5,
+          -11.0,
+          0.0
+        ],
+        [
+          32.5,
+          11.0,
+          1.6
+        ]
+      ],
+      "print_extents_mm": [
+        65.0,
+        22.0,
+        1.6
+      ],
+      "sha256": "d702f8a606f5d8c3711f8a90944ef21c362875ff9c6755b280b5e1a989255381",
+      "passed": true
+    },
+    "coupon_latch.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "connected_bodies": 1,
+      "solid_volume_cm3": 0.7929,
+      "print_bounds_mm": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          34.0,
+          19.9,
+          2.2
+        ]
+      ],
+      "print_extents_mm": [
+        34.0,
+        19.9,
+        2.2
+      ],
+      "sha256": "db2d9724c3e92af529f5fa026cfa8f968909ee02c01fbc804f46ec762d39bd50",
+      "passed": true
+    },
+    "coupon_pins.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "connected_bodies": 1,
+      "solid_volume_cm3": 3.2319,
+      "print_bounds_mm": [
+        [
+          -32.5,
+          -11.0,
+          0.0
+        ],
+        [
+          32.5,
+          11.0,
+          7.8
+        ]
+      ],
+      "print_extents_mm": [
+        65.0,
+        22.0,
+        7.8
+      ],
+      "sha256": "9ed304d7c2c14f562d9b0e1c2ac0c8d37a91f959109e2ab0f81f22f5c030a8e5",
+      "passed": true
+    },
+    "coupon_socket.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "connected_bodies": 1,
+      "solid_volume_cm3": 1.1934,
+      "print_bounds_mm": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          34.0,
+          23.0,
+          4.5
+        ]
+      ],
+      "print_extents_mm": [
+        34.0,
+        23.0,
+        4.5
+      ],
+      "sha256": "599805995c1abfb582aad1910484ab99acd11dbd27db23075f013006769a59f4",
+      "passed": true
+    },
+    "front.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "connected_bodies": 1,
+      "solid_volume_cm3": 27.0443,
+      "print_bounds_mm": [
+        [
+          -67.0,
+          -94.0,
+          0.0
+        ],
+        [
+          67.0,
+          94.0,
+          9.0
+        ]
+      ],
+      "print_extents_mm": [
+        134.0,
+        188.0,
+        9.0
+      ],
+      "sha256": "81c6837a48b3d2d02ef325e4ae96409012cefe0f4bd3fdd0285f941a758c7d97",
+      "passed": true
+    },
+    "rear.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "connected_bodies": 1,
+      "solid_volume_cm3": 83.9995,
+      "print_bounds_mm": [
+        [
+          -67.0,
+          -94.0,
+          0.0
+        ],
+        [
+          67.0,
+          94.0,
+          28.79
+        ]
+      ],
+      "print_extents_mm": [
+        134.0,
+        188.0,
+        28.79
+      ],
+      "sha256": "0ac71af914ea6c5f4d7b222d01b03846e41551de9efe571b3403604e57bdc0a7",
+      "passed": true
+    },
+    "release_key.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "connected_bodies": 1,
+      "solid_volume_cm3": 1.4109,
+      "print_bounds_mm": [
+        [
+          -9.0,
+          -27.0,
+          0.0
+        ],
+        [
+          9.0,
+          20.8,
+          2.2
+        ]
+      ],
+      "print_extents_mm": [
+        18.0,
+        47.8,
+        2.2
+      ],
+      "sha256": "6ab1bbf011097d3bef83d0841569fc30ee338f5572d487da6ed7fe0c04c6240b",
+      "passed": true
+    },
+    "stand.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "connected_bodies": 1,
+      "solid_volume_cm3": 131.8363,
+      "print_bounds_mm": [
+        [
+          -71.0,
+          -80.0,
+          0.0
+        ],
+        [
+          71.0,
+          28.0,
+          29.0286
+        ]
+      ],
+      "print_extents_mm": [
+        142.0,
+        108.0,
+        29.029
+      ],
+      "sha256": "c54bd3dad615e7bacf495cc834224de395d9c1c2aef698e6f754724bc4bebf2c",
+      "passed": true
+    }
+  },
+  "nominal_CSG_checks": {
+    "front_carrier": {
+      "passed": true,
+      "overlap_volume_mm3": 0,
+      "result": "Empty intersection."
+    },
+    "front_rear": {
+      "passed": true,
+      "overlap_volume_mm3": 0.0,
+      "result": "No volumetric overlap; zero-volume coplanar contacts only."
+    },
+    "carrier_rear": {
+      "passed": true,
+      "overlap_volume_mm3": 0.0,
+      "result": "No volumetric overlap; zero-volume coplanar contacts only."
+    },
+    "stand_case": {
+      "passed": true,
+      "overlap_volume_mm3": 0,
+      "result": "Empty intersection."
+    },
+    "hardware_carrier": {
+      "passed": true,
+      "overlap_volume_mm3": 0.0,
+      "result": "No volumetric overlap; zero-volume coplanar contacts only."
+    },
+    "hardware_rear": {
+      "passed": true,
+      "overlap_volume_mm3": 0,
+      "result": "Empty intersection."
+    },
+    "ribbon_carrier": {
+      "passed": true,
+      "overlap_volume_mm3": 0,
+      "result": "Empty intersection."
+    },
+    "ribbon_rear": {
+      "passed": true,
+      "overlap_volume_mm3": 0,
+      "result": "Empty intersection."
+    },
+    "ribbon_front": {
+      "passed": true,
+      "overlap_volume_mm3": 0,
+      "result": "Empty intersection."
+    },
+    "wires_rear": {
+      "passed": true,
+      "overlap_volume_mm3": 2.306261,
+      "result": "Intentional nominal 0.10 mm diametral USB-jacket compression only.",
+      "overlap_bounds_mm": [
+        [
+          8.33266,
+          -91.5,
+          7.4
+        ],
+        [
+          11.6673,
+          -85.0,
+          10.9
+        ]
+      ]
+    },
+    "wires_carrier": {
+      "passed": true,
+      "overlap_volume_mm3": 1.085654,
+      "result": "Intentional nominal 0.10 mm diametral USB-jacket compression only.",
+      "overlap_bounds_mm": [
+        [
+          8.33266,
+          -91.5,
+          5.73266
+        ],
+        [
+          11.6673,
+          -86.0168,
+          7.4
+        ]
+      ]
+    },
+    "usb_stand": {
+      "passed": true,
+      "overlap_volume_mm3": 0,
+      "result": "Empty intersection."
+    }
+  },
+  "assembly_envelope_excluding_power_cord_mm": [
+    142.0,
+    108.0,
+    195.04
+  ],
+  "assembly_bounds_mm": [
+    [
+      -71.0,
+      -80.0,
+      0.0
+    ],
+    [
+      71.0,
+      28.0,
+      195.04
+    ]
+  ],
+  "solid_PLA_estimate": {
+    "assumed_density_g_per_cm3": 1.24,
+    "solid_stand_mass_g": 163.5,
+    "note": "Density is an assumption; use the actual filament density and sliced extrusion for print estimates."
+  },
+  "FFC_route": {
+    "overall_nominal_length_mm": 50.0,
+    "width_mm": 25.5,
+    "ways": 50,
+    "arch_rise_parameter_mm": 10.0230859475,
+    "analytic_minimum_radius_mm": 6.6755,
+    "peak_centerline_Z_mm": 24.3754,
+    "free_arch_X_span_mm": 39.0,
+    "self_crossing": "None: free-arch X is strictly monotone; straight contact ends extend outward.",
+    "limitation": "Mechanical centreline design only. Match actual pitch, contacts, stiffeners and manufacturer bend limits. A short replacement cable may be needed."
+  },
+  "limitations": [
+    "All checks are nominal CAD checks, not physical testing or a safety certification.",
+    "Small components, solder, connector variants and real manufacturing tolerances are not exhaustively modelled.",
+    "Electronics envelopes are not exact manufacturer STEP models.",
+    "CSG checks are static; they do not simulate the entire insertion sequence, flexure forces or latch fatigue.",
+    "The enclosure has not been sliced for a particular printer, printed, thermally tested, impact-tested or pull-tested.",
+    "No claimed splash protection or anti-slip performance; all structural parts are PLA."
+  ],
+  "all_reported_checks_pass": true
+}

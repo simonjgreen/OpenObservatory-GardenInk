@@ -1,0 +1,26 @@
+[
+  {
+    "file": "pi-zero-mechanical-drawing.pdf",
+    "source_url": "https://datasheets.raspberrypi.com/rpizero/raspberry-pi-zero-mechanical-drawing.pdf",
+    "offline_file_included": false,
+    "status": "Reference URL only; manufacturer drawing is not bundled."
+  },
+  {
+    "file": "panel-dimensions.jpg",
+    "source_url": "https://www.waveshare.com/img/devkit/LCD/7.3inch-e-Paper-HAT-E/7.3inch-e-Paper-E-details-size.jpg",
+    "offline_file_included": false,
+    "status": "Reference URL only; manufacturer drawing is not bundled."
+  },
+  {
+    "file": "hat-and-adapter-dimensions.jpg",
+    "source_url": "https://www.waveshare.com/img/devkit/LCD/7.3inch-e-Paper-HAT-E/7.3inch-e-Paper-HAT-E-details-size.jpg",
+    "offline_file_included": false,
+    "status": "Reference URL only; manufacturer drawing is not bundled."
+  },
+  {
+    "file": "kit-arrangement.jpg",
+    "source_url": "https://www.waveshare.com/img/devkit/LCD/7.3inch-e-Paper-HAT-E/7.3inch-e-Paper-HAT-E-details-5.jpg",
+    "offline_file_included": false,
+    "status": "Reference URL only; manufacturer drawing is not bundled."
+  }
+]

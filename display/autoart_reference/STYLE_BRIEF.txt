@@ -1,0 +1,22 @@
+Create ONE new natural-history bird illustration. The uploaded robin is the single approved STYLE REFERENCE, not the target bird. Reproduce its visual language so the new plate could sit beside it in one consistently illustrated field guide.
+
+TARGET: {api_label} ({scientific_name}).
+
+STYLE IS NON-NEGOTIABLE:
+- Faithful to the reference's delicate, irregular black pen-and-ink outlines, finely engraved feather hatching, naturalistic bird anatomy and restrained hand-tinted wash.
+- Black feather linework carries the form; white paper remains visible between strokes. Keep dense dark feathers readable as feathers rather than a flat black silhouette.
+- Restrained, species-appropriate natural colour accents, like the robin's lightly tinted breast. Colour must not replace the drawn feather structure.
+- No flat vector shapes, geometric procedural bird bodies, icon design, clip-art, cartoons, posterisation, plastic shading, 3D rendering or photorealistic photography.
+- No pointillist noise replacing drawn feathers; no sepia or textured paper, tinted background, drop shadow, decorative frame, letters, labels, signature, watermark, collage or second bird.
+- The reference image is a ROBIN: do NOT copy its orange breast, round body, bill, wing shape or proportions onto another species. The target's identity must remain recognisable. Do not turn a rook into a blackbird, a crow into a rook, or a long-tailed tit into a robin.
+
+COMPOSITION:
+{pose}
+One isolated complete bird on pure white (#FFFFFF), facing right when appropriate, centred with at least 8% clear padding. Bill, wings, tail, toes and perch must not touch the image boundary. A small twig/ground stroke can support the feet, but no elaborate scenery or flowers. Use the same subtle ink treatment on the support. Fill most of the useful canvas with the bird.
+
+This image will be displayed about 232x226 pixels in a main card and 102x100 pixels in a thumbnail on a six-colour e-paper panel. Preserve a readable silhouette and decisive feather lines when reduced, not microscopic detail alone. Supply full-colour natural ink artwork; the application performs its own display quantisation. Do not simulate a photographed e-paper screen or a UI.
+
+IDENTITY NOTES (optional artistic guidance, not observed sex/age information):
+{note}
+
+Return the illustration only. Matching the uploaded robin's drawing style is more important than adding flourish.

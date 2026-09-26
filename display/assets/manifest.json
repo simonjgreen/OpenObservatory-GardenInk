@@ -1,0 +1,592 @@
+{
+  "parus major": {
+    "name": "Great Tit",
+    "file": "parus_major.png",
+    "aliases": [
+      "great tit"
+    ],
+    "kind": "generated illustrative sketch",
+    "not_evidence": true,
+    "display_name": "Great Tit"
+  },
+  "turdus merula": {
+    "name": "Common Blackbird",
+    "file": "turdus_merula.png",
+    "aliases": [
+      "blackbird",
+      "common blackbird",
+      "eurasian blackbird"
+    ],
+    "kind": "generated illustrative sketch",
+    "not_evidence": true,
+    "display_name": "Blackbird"
+  },
+  "cyanistes caeruleus": {
+    "name": "Eurasian Blue Tit",
+    "file": "cyanistes_caeruleus.png",
+    "aliases": [
+      "blue tit",
+      "eurasian blue tit"
+    ],
+    "kind": "generated illustrative sketch",
+    "not_evidence": true,
+    "display_name": "Blue Tit"
+  },
+  "erithacus rubecula": {
+    "name": "European Robin",
+    "file": "erithacus_rubecula.png",
+    "aliases": [
+      "robin",
+      "european robin"
+    ],
+    "kind": "generated illustrative sketch",
+    "not_evidence": true,
+    "display_name": "Robin"
+  },
+  "fringilla coelebs": {
+    "name": "Common Chaffinch",
+    "file": "fringilla_coelebs.png",
+    "aliases": [
+      "chaffinch",
+      "common chaffinch"
+    ],
+    "kind": "generated illustrative sketch",
+    "not_evidence": true,
+    "display_name": "Chaffinch"
+  },
+  "columba palumbus": {
+    "name": "Common Woodpigeon",
+    "file": "columba_palumbus.png",
+    "aliases": [
+      "woodpigeon",
+      "common woodpigeon",
+      "common wood pigeon",
+      "wood pigeon"
+    ],
+    "kind": "generated illustrative sketch",
+    "not_evidence": true,
+    "display_name": "Woodpigeon"
+  },
+  "troglodytes troglodytes": {
+    "name": "Eurasian Wren",
+    "file": "troglodytes_troglodytes.png",
+    "aliases": [
+      "wren",
+      "eurasian wren"
+    ],
+    "kind": "generated illustrative sketch",
+    "not_evidence": true,
+    "display_name": "Wren"
+  },
+  "prunella modularis": {
+    "name": "Dunnock",
+    "file": "prunella_modularis.png",
+    "aliases": [
+      "dunnock"
+    ],
+    "kind": "generated illustrative sketch",
+    "not_evidence": true,
+    "display_name": "Dunnock"
+  },
+  "carduelis carduelis": {
+    "name": "European Goldfinch",
+    "file": "carduelis_carduelis.png",
+    "aliases": [
+      "goldfinch",
+      "european goldfinch"
+    ],
+    "kind": "generated illustrative sketch",
+    "not_evidence": true,
+    "display_name": "Goldfinch"
+  },
+  "corvus monedula": {
+    "name": "Eurasian Jackdaw",
+    "aliases": [
+      "jackdaw",
+      "eurasian jackdaw"
+    ],
+    "file": "corvus_monedula.png",
+    "not_evidence": true,
+    "kind": "generated illustration crop",
+    "display_name": "Jackdaw"
+  },
+  "corvus frugilegus": {
+    "name": "Rook",
+    "aliases": [
+      "rook",
+      "rook"
+    ],
+    "file": "corvus_frugilegus.png",
+    "not_evidence": true,
+    "kind": "generated illustration crop",
+    "display_name": "Rook"
+  },
+  "aegithalos caudatus": {
+    "name": "Long-tailed Tit",
+    "aliases": [
+      "long-tailed tit",
+      "long-tailed tit"
+    ],
+    "file": "aegithalos_caudatus.png",
+    "not_evidence": true,
+    "kind": "generated illustration crop",
+    "display_name": "Long-tailed Tit"
+  },
+  "streptopelia decaocto": {
+    "name": "Collared Dove",
+    "aliases": [
+      "collared dove",
+      "collared dove"
+    ],
+    "file": "streptopelia_decaocto.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Collared Dove"
+  },
+  "strix aluco": {
+    "name": "Tawny Owl",
+    "aliases": [
+      "tawny owl",
+      "tawny owl"
+    ],
+    "file": "strix_aluco.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Tawny Owl"
+  },
+  "pica pica": {
+    "name": "Common Magpie",
+    "aliases": [
+      "magpie",
+      "common magpie"
+    ],
+    "file": "pica_pica.png",
+    "not_evidence": true,
+    "kind": "generated illustration crop",
+    "display_name": "Magpie"
+  },
+  "delichon urbicum": {
+    "name": "Western House Martin",
+    "aliases": [
+      "house martin",
+      "western house martin"
+    ],
+    "file": "delichon_urbicum.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "House Martin"
+  },
+  "chloris chloris": {
+    "name": "European Greenfinch",
+    "aliases": [
+      "greenfinch",
+      "european greenfinch"
+    ],
+    "file": "chloris_chloris.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Greenfinch"
+  },
+  "muscicapa striata": {
+    "name": "Spotted Flycatcher",
+    "aliases": [
+      "spotted flycatcher",
+      "spotted flycatcher"
+    ],
+    "file": "muscicapa_striata.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Spotted Flycatcher"
+  },
+  "regulus regulus": {
+    "name": "Goldcrest",
+    "aliases": [
+      "goldcrest",
+      "goldcrest"
+    ],
+    "file": "regulus_regulus.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Goldcrest"
+  },
+  "dendrocopos major": {
+    "name": "Great Spotted Woodpecker",
+    "aliases": [
+      "great spotted woodpecker",
+      "great spotted woodpecker"
+    ],
+    "file": "dendrocopos_major.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Great Spotted Woodpecker"
+  },
+  "sitta europaea": {
+    "name": "Eurasian Nuthatch",
+    "aliases": [
+      "nuthatch",
+      "eurasian nuthatch"
+    ],
+    "file": "sitta_europaea.png",
+    "not_evidence": true,
+    "kind": "generated illustration crop",
+    "display_name": "Nuthatch"
+  },
+  "hirundo rustica": {
+    "name": "Barn Swallow",
+    "aliases": [
+      "swallow",
+      "barn swallow"
+    ],
+    "file": "hirundo_rustica.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Swallow"
+  },
+  "branta canadensis": {
+    "name": "Canada Goose",
+    "aliases": [
+      "canada goose",
+      "canada goose"
+    ],
+    "file": "branta_canadensis.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Canada Goose"
+  },
+  "columba oenas": {
+    "name": "Stock Dove",
+    "aliases": [
+      "stock dove",
+      "stock dove"
+    ],
+    "file": "columba_oenas.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Stock Dove"
+  },
+  "corvus corone": {
+    "name": "Carrion Crow",
+    "aliases": [
+      "carrion crow",
+      "carrion crow"
+    ],
+    "file": "corvus_corone.png",
+    "not_evidence": true,
+    "kind": "generated illustration crop",
+    "display_name": "Carrion Crow"
+  },
+  "phasianus colchicus": {
+    "name": "Common Pheasant",
+    "aliases": [
+      "pheasant",
+      "common pheasant"
+    ],
+    "file": "phasianus_colchicus.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Pheasant"
+  },
+  "sylvia atricapilla": {
+    "name": "Eurasian Blackcap",
+    "aliases": [
+      "blackcap",
+      "eurasian blackcap"
+    ],
+    "file": "sylvia_atricapilla.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Blackcap"
+  },
+  "picus viridis": {
+    "name": "Eurasian Green Woodpecker",
+    "aliases": [
+      "green woodpecker",
+      "eurasian green woodpecker"
+    ],
+    "file": "picus_viridis.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Green Woodpecker"
+  },
+  "turdus philomelos": {
+    "name": "Song Thrush",
+    "aliases": [
+      "song thrush",
+      "song thrush"
+    ],
+    "file": "turdus_philomelos.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Song Thrush"
+  },
+  "ardea cinerea": {
+    "name": "Grey Heron",
+    "aliases": [
+      "grey heron",
+      "grey heron"
+    ],
+    "file": "ardea_cinerea.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Grey Heron"
+  },
+  "alcedo atthis": {
+    "name": "Common Kingfisher",
+    "aliases": [
+      "kingfisher",
+      "common kingfisher"
+    ],
+    "file": "alcedo_atthis.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Kingfisher"
+  },
+  "columba livia": {
+    "name": "Rock Dove",
+    "aliases": [
+      "rock dove",
+      "rock dove"
+    ],
+    "file": "columba_livia.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Rock Dove"
+  },
+  "buteo buteo": {
+    "name": "Common Buzzard",
+    "aliases": [
+      "buzzard",
+      "common buzzard"
+    ],
+    "file": "buteo_buteo.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Buzzard"
+  },
+  "phylloscopus collybita": {
+    "name": "Common Chiffchaff",
+    "aliases": [
+      "chiffchaff",
+      "common chiffchaff"
+    ],
+    "file": "phylloscopus_collybita.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Chiffchaff"
+  },
+  "corvus corax": {
+    "name": "Common Raven",
+    "aliases": [
+      "raven",
+      "common raven"
+    ],
+    "file": "corvus_corax.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Raven"
+  },
+  "periparus ater": {
+    "name": "Coal Tit",
+    "aliases": [
+      "coal tit",
+      "coal tit"
+    ],
+    "file": "periparus_ater.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Coal Tit"
+  },
+  "sturnus vulgaris": {
+    "name": "Common Starling",
+    "aliases": [
+      "starling",
+      "common starling"
+    ],
+    "file": "sturnus_vulgaris.png",
+    "not_evidence": true,
+    "kind": "generated illustration crop",
+    "display_name": "Starling"
+  },
+  "motacilla cinerea": {
+    "name": "Grey Wagtail",
+    "aliases": [
+      "grey wagtail",
+      "grey wagtail"
+    ],
+    "file": "motacilla_cinerea.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Grey Wagtail"
+  },
+  "garrulus glandarius": {
+    "name": "Eurasian Jay",
+    "aliases": [
+      "jay",
+      "eurasian jay"
+    ],
+    "file": "garrulus_glandarius.png",
+    "not_evidence": true,
+    "kind": "generated illustration crop",
+    "display_name": "Jay"
+  },
+  "anas platyrhynchos": {
+    "name": "Mallard",
+    "aliases": [
+      "mallard",
+      "mallard"
+    ],
+    "file": "anas_platyrhynchos.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Mallard"
+  },
+  "turdus iliacus": {
+    "name": "Redwing",
+    "aliases": [
+      "redwing",
+      "redwing"
+    ],
+    "file": "turdus_iliacus.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Redwing"
+  },
+  "milvus milvus": {
+    "name": "Red Kite",
+    "aliases": [
+      "red kite",
+      "red kite"
+    ],
+    "file": "milvus_milvus.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Red Kite"
+  },
+  "motacilla alba": {
+    "name": "Pied Wagtail/White Wagtail",
+    "aliases": [
+      "pied wagtail",
+      "pied wagtail/white wagtail"
+    ],
+    "file": "motacilla_alba.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Pied Wagtail"
+  },
+  "fulica atra": {
+    "name": "Eurasian Coot",
+    "aliases": [
+      "coot",
+      "eurasian coot"
+    ],
+    "file": "fulica_atra.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Coot"
+  },
+  "porzana porzana": {
+    "name": "Spotted Crake",
+    "aliases": [
+      "spotted crake",
+      "spotted crake"
+    ],
+    "file": "porzana_porzana.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Spotted Crake"
+  },
+  "gallinula chloropus": {
+    "name": "Common Moorhen",
+    "aliases": [
+      "moorhen",
+      "common moorhen"
+    ],
+    "file": "gallinula_chloropus.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Moorhen"
+  },
+  "passer domesticus": {
+    "name": "House Sparrow",
+    "aliases": [
+      "house sparrow",
+      "house sparrow"
+    ],
+    "file": "passer_domesticus.png",
+    "not_evidence": true,
+    "kind": "generated illustration crop",
+    "display_name": "House Sparrow"
+  },
+  "coloeus monedula": {
+    "name": "Eurasian Jackdaw",
+    "aliases": [
+      "jackdaw",
+      "eurasian jackdaw"
+    ],
+    "file": "corvus_monedula.png",
+    "not_evidence": true,
+    "kind": "generated illustration crop",
+    "display_name": "Jackdaw",
+    "canonical_name": "corvus monedula"
+  },
+  "carduelis chloris": {
+    "name": "European Greenfinch",
+    "aliases": [
+      "greenfinch",
+      "european greenfinch"
+    ],
+    "file": "chloris_chloris.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Greenfinch",
+    "canonical_name": "chloris chloris"
+  },
+  "parus caeruleus": {
+    "name": "Eurasian Blue Tit",
+    "file": "cyanistes_caeruleus.png",
+    "aliases": [
+      "blue tit",
+      "eurasian blue tit"
+    ],
+    "kind": "generated illustrative sketch",
+    "not_evidence": true,
+    "display_name": "Blue Tit",
+    "canonical_name": "cyanistes caeruleus"
+  },
+  "parus ater": {
+    "name": "Coal Tit",
+    "aliases": [
+      "coal tit",
+      "coal tit"
+    ],
+    "file": "periparus_ater.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "Coal Tit",
+    "canonical_name": "periparus ater"
+  },
+  "parus caudatus": {
+    "name": "Long-tailed Tit",
+    "aliases": [
+      "long-tailed tit",
+      "long-tailed tit"
+    ],
+    "file": "aegithalos_caudatus.png",
+    "not_evidence": true,
+    "kind": "generated illustration crop",
+    "display_name": "Long-tailed Tit",
+    "canonical_name": "aegithalos caudatus"
+  },
+  "delichon urbica": {
+    "name": "Western House Martin",
+    "aliases": [
+      "house martin",
+      "western house martin"
+    ],
+    "file": "delichon_urbicum.png",
+    "not_evidence": true,
+    "kind": "procedural decorative illustration",
+    "display_name": "House Martin",
+    "canonical_name": "delichon urbicum"
+  }
+}

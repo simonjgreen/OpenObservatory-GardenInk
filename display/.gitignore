@@ -1,0 +1,7 @@
+config.json
+token.txt
+state/*
+!state/.keep
+__pycache__/
+*.pyc
+*.log

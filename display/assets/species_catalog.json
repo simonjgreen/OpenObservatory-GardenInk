@@ -1,0 +1,237 @@
+[
+  {
+    "scientific_name": "Erithacus rubecula",
+    "display_name": "Robin",
+    "api_label": "European Robin"
+  },
+  {
+    "scientific_name": "Columba palumbus",
+    "display_name": "Woodpigeon",
+    "api_label": "Common Woodpigeon"
+  },
+  {
+    "scientific_name": "Corvus monedula",
+    "display_name": "Jackdaw",
+    "api_label": "Eurasian Jackdaw"
+  },
+  {
+    "scientific_name": "Corvus frugilegus",
+    "display_name": "Rook",
+    "api_label": "Rook"
+  },
+  {
+    "scientific_name": "Cyanistes caeruleus",
+    "display_name": "Blue Tit",
+    "api_label": "Eurasian Blue Tit"
+  },
+  {
+    "scientific_name": "Aegithalos caudatus",
+    "display_name": "Long-tailed Tit",
+    "api_label": "Long-tailed Tit"
+  },
+  {
+    "scientific_name": "Streptopelia decaocto",
+    "display_name": "Collared Dove",
+    "api_label": "Collared Dove"
+  },
+  {
+    "scientific_name": "Prunella modularis",
+    "display_name": "Dunnock",
+    "api_label": "Dunnock"
+  },
+  {
+    "scientific_name": "Turdus merula",
+    "display_name": "Blackbird",
+    "api_label": "Eurasian Blackbird"
+  },
+  {
+    "scientific_name": "Carduelis carduelis",
+    "display_name": "Goldfinch",
+    "api_label": "European Goldfinch"
+  },
+  {
+    "scientific_name": "Strix aluco",
+    "display_name": "Tawny Owl",
+    "api_label": "Tawny Owl"
+  },
+  {
+    "scientific_name": "Pica pica",
+    "display_name": "Magpie",
+    "api_label": "Common Magpie"
+  },
+  {
+    "scientific_name": "Delichon urbicum",
+    "display_name": "House Martin",
+    "api_label": "Western House Martin"
+  },
+  {
+    "scientific_name": "Chloris chloris",
+    "display_name": "Greenfinch",
+    "api_label": "European Greenfinch"
+  },
+  {
+    "scientific_name": "Troglodytes troglodytes",
+    "display_name": "Wren",
+    "api_label": "Eurasian Wren"
+  },
+  {
+    "scientific_name": "Muscicapa striata",
+    "display_name": "Spotted Flycatcher",
+    "api_label": "Spotted Flycatcher"
+  },
+  {
+    "scientific_name": "Regulus regulus",
+    "display_name": "Goldcrest",
+    "api_label": "Goldcrest"
+  },
+  {
+    "scientific_name": "Fringilla coelebs",
+    "display_name": "Chaffinch",
+    "api_label": "Common Chaffinch"
+  },
+  {
+    "scientific_name": "Dendrocopos major",
+    "display_name": "Great Spotted Woodpecker",
+    "api_label": "Great Spotted Woodpecker"
+  },
+  {
+    "scientific_name": "Parus major",
+    "display_name": "Great Tit",
+    "api_label": "Great Tit"
+  },
+  {
+    "scientific_name": "Sitta europaea",
+    "display_name": "Nuthatch",
+    "api_label": "Eurasian Nuthatch"
+  },
+  {
+    "scientific_name": "Hirundo rustica",
+    "display_name": "Swallow",
+    "api_label": "Barn Swallow"
+  },
+  {
+    "scientific_name": "Branta canadensis",
+    "display_name": "Canada Goose",
+    "api_label": "Canada Goose"
+  },
+  {
+    "scientific_name": "Columba oenas",
+    "display_name": "Stock Dove",
+    "api_label": "Stock Dove"
+  },
+  {
+    "scientific_name": "Corvus corone",
+    "display_name": "Carrion Crow",
+    "api_label": "Carrion Crow"
+  },
+  {
+    "scientific_name": "Phasianus colchicus",
+    "display_name": "Pheasant",
+    "api_label": "Common Pheasant"
+  },
+  {
+    "scientific_name": "Sylvia atricapilla",
+    "display_name": "Blackcap",
+    "api_label": "Eurasian Blackcap"
+  },
+  {
+    "scientific_name": "Picus viridis",
+    "display_name": "Green Woodpecker",
+    "api_label": "Eurasian Green Woodpecker"
+  },
+  {
+    "scientific_name": "Turdus philomelos",
+    "display_name": "Song Thrush",
+    "api_label": "Song Thrush"
+  },
+  {
+    "scientific_name": "Ardea cinerea",
+    "display_name": "Grey Heron",
+    "api_label": "Grey Heron"
+  },
+  {
+    "scientific_name": "Alcedo atthis",
+    "display_name": "Kingfisher",
+    "api_label": "Common Kingfisher"
+  },
+  {
+    "scientific_name": "Columba livia",
+    "display_name": "Rock Dove",
+    "api_label": "Rock Dove"
+  },
+  {
+    "scientific_name": "Buteo buteo",
+    "display_name": "Buzzard",
+    "api_label": "Common Buzzard"
+  },
+  {
+    "scientific_name": "Phylloscopus collybita",
+    "display_name": "Chiffchaff",
+    "api_label": "Common Chiffchaff"
+  },
+  {
+    "scientific_name": "Corvus corax",
+    "display_name": "Raven",
+    "api_label": "Common Raven"
+  },
+  {
+    "scientific_name": "Periparus ater",
+    "display_name": "Coal Tit",
+    "api_label": "Coal Tit"
+  },
+  {
+    "scientific_name": "Sturnus vulgaris",
+    "display_name": "Starling",
+    "api_label": "Common Starling"
+  },
+  {
+    "scientific_name": "Motacilla cinerea",
+    "display_name": "Grey Wagtail",
+    "api_label": "Grey Wagtail"
+  },
+  {
+    "scientific_name": "Garrulus glandarius",
+    "display_name": "Jay",
+    "api_label": "Eurasian Jay"
+  },
+  {
+    "scientific_name": "Anas platyrhynchos",
+    "display_name": "Mallard",
+    "api_label": "Mallard"
+  },
+  {
+    "scientific_name": "Turdus iliacus",
+    "display_name": "Redwing",
+    "api_label": "Redwing"
+  },
+  {
+    "scientific_name": "Milvus milvus",
+    "display_name": "Red Kite",
+    "api_label": "Red Kite"
+  },
+  {
+    "scientific_name": "Motacilla alba",
+    "display_name": "Pied Wagtail",
+    "api_label": "Pied Wagtail/White Wagtail"
+  },
+  {
+    "scientific_name": "Fulica atra",
+    "display_name": "Coot",
+    "api_label": "Eurasian Coot"
+  },
+  {
+    "scientific_name": "Porzana porzana",
+    "display_name": "Spotted Crake",
+    "api_label": "Spotted Crake"
+  },
+  {
+    "scientific_name": "Gallinula chloropus",
+    "display_name": "Moorhen",
+    "api_label": "Common Moorhen"
+  },
+  {
+    "scientific_name": "Passer domesticus",
+    "display_name": "House Sparrow",
+    "api_label": "House Sparrow"
+  }
+]

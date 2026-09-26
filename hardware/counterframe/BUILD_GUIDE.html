@@ -1,0 +1,225 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Counterframe — illustrated build guide</title><style>body{margin:0;background:#f3f4f1;color:#24362e;font:17px/1.6 system-ui,sans-serif}main{max-width:1050px;margin:0 auto;padding:45px 32px 90px}h1{font-size:44px;line-height:1.1}h2{margin-top:2.3em;border-top:1px solid #cad2ca;padding-top:18px}h3{margin-top:1.8em}a{color:#315d55}table{width:100%;border-collapse:collapse;font-size:15px;margin:22px 0}th,td{padding:11px 13px;border-bottom:1px solid #cdd5cc;text-align:left;vertical-align:top}th{background:#e2e8df}blockquote{margin:25px 0;padding:10px 22px;background:#f3e9d7;border-left:4px solid #ad8055}pre{background:#e2e8df;padding:18px;overflow:auto}code{font-size:.87em}img{display:block;width:100%;height:auto}figure{margin:30px 0 55px}figcaption{font-size:14px;color:#5e6f63;padding:10px 4px}header small{letter-spacing:3px;font-size:13px}.tag{display:inline-block;background:#dce6db;padding:5px 12px;border-radius:5px;margin:6px 9px 6px 0;font-size:14px}section#guide{margin-top:70px}li{margin-bottom:9px}@media print{body{background:white}main{padding:0;font-size:11pt}figure,table{break-inside:avoid}h2{break-after:avoid}img{max-height:230mm;object-fit:contain}}</style></head><body><main><header><small>COUNTERFRAME / 7.3 E6 / V1.0</small><h1>A quiet place for a changing screen.</h1><p>Portrait countertop enclosure for the Pi Zero and Waveshare Spectra 6 (E).</p><span class="tag">4 structural PLA parts</span><span class="tag">0 screws</span><span class="tag">142 × 108 × 195 mm assembled</span><blockquote><strong>Engineering prototype; an assembled device is shown in the project README, but detailed fit qualification remains outstanding.</strong> Confirm the exact (E) hardware, a matched 50 mm FFC and the slim USB plug before the full print.</blockquote></header><figure><img src="renders/assembled.png" alt="Assembled CAD render. Illustrative content on the display."><figcaption>Assembled CAD render. Illustrative content on the display.</figcaption></figure><figure><img src="renders/components.png" alt="The four structural prints. Individual STL geometry in print orientation."><figcaption>The four structural prints. Individual STL geometry in print orientation.</figcaption></figure><figure><img src="renders/routing.png" alt="Open-rear layout, including the short replacement FFC and single USB power lead."><figcaption>Open-rear layout, including the short replacement FFC and single USB power lead.</figcaption></figure><figure><img src="renders/exploded.png" alt="Exploded geometry view. Cables omitted for clarity."><figcaption>Exploded geometry view. Cables omitted for clarity.</figcaption></figure><figure><img src="renders/rear_view.png" alt="Tapered rear cover and cable exit behind the stand."><figcaption>Tapered rear cover and cable exit behind the stand.</figcaption></figure><figure><img src="renders/side_view.png" alt="The 10-degree lean and thin visible perimeter, with space behind for connectors."><figcaption>The 10-degree lean and thin visible perimeter, with space behind for connectors.</figcaption></figure><section id="guide"><h1>Counterframe / 7.3 E6</h1>
+<p><strong>Portrait countertop enclosure · four structural PLA prints · no screws</strong></p>
+<p>Version 1.0 engineering prototype, 23 September 2026. Designed in OpenSCAD and exported to individual manufacturing STLs. The render images are produced from the same geometry, not concept illustrations of a different object.</p>
+<blockquote>
+<p><strong>Detailed physical fit qualification remains outstanding.</strong> Published board outlines and mounting-hole positions have been checked; component heights, cable dimensions, bend suitability, print tolerances and real countertop stability still require first-article verification. Read the compatibility table before printing. Do not force the display or its bonded flex to fit.</p>
+</blockquote>
+<h2>Design at a glance</h2>
+<p>The front is a softly rounded picture frame, with a 9 mm-deep perimeter and a rear housing that tapers to a smaller back face. The maximum enclosure depth is 34 mm. A separate low plinth holds the screen 10 degrees back from vertical. Boards are mounted beside one another rather than stacking the HAT on the Pi.</p>
+<table>
+<thead>
+<tr>
+  <th>Item</th>
+  <th style="text-align:right">Nominal CAD dimension</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Front body</td>
+  <td style="text-align:right">134 × 188 mm</td>
+</tr>
+<tr>
+  <td>Maximum body thickness</td>
+  <td style="text-align:right">34 mm</td>
+</tr>
+<tr>
+  <td>Visible straight perimeter depth</td>
+  <td style="text-align:right">9 mm</td>
+</tr>
+<tr>
+  <td>Stand footprint</td>
+  <td style="text-align:right">142 × 108 mm</td>
+</tr>
+<tr>
+  <td>Main plinth thickness</td>
+  <td style="text-align:right">8 mm</td>
+</tr>
+<tr>
+  <td>Assembled height</td>
+  <td style="text-align:right">Approximately 195 mm</td>
+</tr>
+<tr>
+  <td>Display opening</td>
+  <td style="text-align:right">96.8 × 160.8 mm, portrait</td>
+</tr>
+<tr>
+  <td>Image area</td>
+  <td style="text-align:right">96 × 160 mm, portrait</td>
+</tr>
+<tr>
+  <td>Shell wall / front face</td>
+  <td style="text-align:right">2.2 / 1.8 mm</td>
+</tr>
+<tr>
+  <td>Backward inclination</td>
+  <td style="text-align:right">10°</td>
+</tr>
+</tbody>
+</table>
+<p>The bezel centres the <strong>visible image</strong>, not the raw glass outline. The glass is offset by 2.9 mm relative to the image centre because the original panel's inactive borders are unequal. The wider side border also makes room for the bonded flex to return behind the display.</p>
+<h2>Files</h2>
+<ul>
+<li><code>counterframe.scad</code>: editable master model; no external CAD library required.</li>
+<li><code>stl/front.stl</code>, <code>carrier.stl</code>, <code>rear.stl</code>, <code>stand.stl</code>: print <strong>one of each</strong>.</li>
+<li><code>stl/release_key.stl</code>: optional small PLA tool for pressing the release tabs.</li>
+<li><code>stl/coupon_pins.stl</code>, <code>coupon_holes.stl</code>: peg-fit samples.</li>
+<li><code>stl/coupon_latch.stl</code>, <code>coupon_socket.stl</code>: small snap-fit practice pieces.</li>
+<li><code>renders/</code>: assembled, rear, side, internal, exploded and individual-part views.</li>
+<li><code>BUILD_GUIDE.html</code>: illustrated offline guide; open in a browser.</li>
+<li><code>validation.json</code>: mesh and nominal geometry check results, with their limitations.</li>
+<li><code>export.sh</code>: reproduces the manufacturing STLs with the OpenSCAD CLI.</li>
+<li><code>render.py</code> and <code>checks/export_render_meshes.py</code>: optional renderer; requires Python, VTK, NumPy and Pillow in addition to OpenSCAD. <code>reference/</code> contains <strong>non-printing, approximate electronics and cable envelopes</strong> used by it.</li>
+</ul>
+<p>All manufacturing STLs are in <strong>millimetres</strong>, already oriented for printing. Do not merge them into a single print, scale them to fit a bed, or print the electronics reference meshes. The assembly and exploded selectors are for inspection, not a single printable object.</p>
+<h2>Hardware compatibility: verify these first</h2>
+<p>This is specifically based on <strong>Waveshare 7.3inch e-Paper HAT (E), E Ink Spectra 6</strong>, with its separate small FPC adapter and dedicated blue driver HAT. It is <strong>not</strong> a claimed fit for the seven-colour (F), the four-colour (G), a generic e-Paper driver board, or a PhotoPainter board. [S1–S4]</p>
+<table>
+<thead>
+<tr>
+  <th>Hardware</th>
+  <th>Published outline / holes used</th>
+  <th>What still needs measuring</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Display glass</td>
+  <td>170.2 × 111.2 mm; active 160 × 96; model thickness 0.91 mm</td>
+  <td>Actual thickness, back-side features and allowable flex-bending region</td>
+</tr>
+<tr>
+  <td>Dedicated (E) HAT</td>
+  <td>65 × 30.5 mm; 58 × 23 hole pitch; Ø3 mm holes</td>
+  <td>Underside header and top-side connector/switch heights</td>
+</tr>
+<tr>
+  <td>Small adapter</td>
+  <td>45 × 21 mm; 38 × 14 hole pitch; Ø3 mm holes</td>
+  <td>Socket orientation, housing heights and any underside parts</td>
+</tr>
+<tr>
+  <td>Raspberry Pi Zero</td>
+  <td>65 × 30 mm; 58 × 23 hole pitch; Ø2.75 mm holes</td>
+  <td>Your board revision, populated components and GPIO connector boots</td>
+</tr>
+</tbody>
+</table>
+<p>The Pi mounting pattern is taken from the official Pi Zero drawing. The component keep-out is a conservative <strong>approximation</strong>, not a manufacturer STEP model. A Zero 2 W may share the mounting outline, but this package does not certify every component of every Zero-family revision. Check your actual unit. [S5]</p>
+<h3>Specific cable and connector assumptions</h3>
+<ol>
+<li><strong>One slim, straight micro-USB plug</strong> into the Pi's <strong>PWR IN</strong> port. The modelled moulded body is 9.6 mm wide × 14 mm long × 5.6 mm thick; the cable jacket is Ø3.4 mm. A bulky boot, ferrite bead or right-angle connector is not an assumed fit. This does not add a USB-C panel socket or a USB extension inside the case.</li>
+<li><strong>50 mm overall-length, 50-way FFC</strong> between the adapter and HAT, with the correct pitch and contact-side arrangement for the kit. The modelled path is 50 mm including the seated ends. This is a <strong>short interconnect</strong>, not an attempt to fold a long kit cable into the case. The actual supplied cable length has <strong>not</strong> been established; obtain a matching short replacement when necessary. Measure yours; do not stretch a shorter cable to this route or compress a longer one into a tight crease. Preserve the manufacturer's contact orientation.</li>
+<li>An eight-wire SPI/power lead connects the remote HAT to the Pi GPIO. The model permits female jumper housings extending 14 mm above the Pi header plastic. Follow the Waveshare pinout; the simplified wire colours and positions in the render are <strong>not a wiring diagram</strong>. No second external power supply is designed into the enclosure.</li>
+<li>The short bonded panel tail is taken as 24 mm long × 25.5 mm wide from the drawing. Its modelled return has a <strong>4.5 mm bend radius</strong>. The separate 50 mm FFC follows one smooth arch with approximately 6.7 mm minimum modelled radius. These are <strong>design assumptions, not manufacturer-approved minimum bend radii</strong>. Reject the route if it would bend a stiffener, IC, bonded transition, or unsuitable portion of the actual tail. [S2, S6]</li>
+</ol>
+<h2>How the retention works</h2>
+<h3>Front bezel and glass</h3>
+<p>The glass rests on its inactive front border inside broad lateral guides. It is captured between the bezel and the skeletal carrier with <strong>0.15 mm nominal axial clearance</strong> and <strong>0.30 mm clearance per side</strong>. There is no intended spring preload, press fit, conical peg contact or adhesive on the glass. The carrier must click home without squeezing or bowing it. The nominal backside air gap also separates the carrier crossbars from the glass.</p>
+<h3>Internal carrier and boards</h3>
+<p>The carrier locates on four tapered bezel pins and locks into four side windows with long, in-plane flexure tabs. Each PCB sits on <strong>four tapered-tip locating posts</strong>. Their parallel locating portions are Ø2.50 mm for the Pi and Ø2.70 mm for the HAT and adapter. The taper is a lead-in, not a wedge driven into the PCB hole.</p>
+<p>The rear cover has <strong>twelve integral annular retaining collars</strong> aligned with those posts. When the lid is fitted, these capture the mounting-hole lands from above with 0.15 mm nominal clearance. Central bores in the collars clear the peg tips. This separates lateral location from axial retention and avoids relying on friction in a PCB hole. The rear cover has separate hard stops over the four carrier fixings, relieved for the front locator tips.</p>
+<p>The boards are intentionally <strong>not retained against lifting while the cover is removed</strong>. Assemble and service with the frame lying face-down, not standing vertically with loose boards hanging on pegs.</p>
+<h3>Rear cover and stand</h3>
+<p>Four independent rear-cover snap tabs engage their own side windows. The front and carrier clips use different positions, so servicing the lid does not require releasing the glass carrier.</p>
+<p>The stand has a fitted angled cradle, two rear buttresses and two detent leaves that engage recesses below the image. It is a separate part so its mass can be concentrated low down. Print it <strong>solid PLA</strong>: no metal ballast or rubber feet are required by the design.</p>
+<p>PLA feet are not a substitute for rubber grip. The wide base is intended to resist tipping during modest movement, but the actual unit may slide on a polished or wet counter. This design has not been bump-, pull- or drop-tested. Lift it by the base rather than by the display bezel.</p>
+<h2>Cable routing</h2>
+<p>Viewed <strong>from the open rear</strong>, the Pi is at the bottom, the driver HAT is above it on the left, and the small adapter is on the right.</p>
+<ul>
+<li>The display's short bonded flex exits the <strong>right side in this rear view</strong>, rounds back inside the side pocket and enters the adapter's outer socket. Seen from the front, this is the display's left edge.</li>
+<li>The white 50 mm FFC follows a single broad arch between the adapter and HAT. Its centreline travels monotonically from one socket to the other, so it has no crossing folds. It bends through its thickness, without an edgewise fold or twist. The carrier has fences beside this lane and the lid's retaining columns are outside the modelled route.</li>
+<li>SPI wires run left from the Pi <strong>below the lower HAT mounting posts</strong>, then up the left-hand side into the HAT's eight-pin connector. Do not pull them diagonally across the lid's collar positions.</li>
+<li>USB power enters the Pi directly, follows a shaped jacket saddle at the lower edge, and sweeps rearwards through the stand's open underside channel. The nominal jacket path uses <strong>8 mm-radius bends</strong>. Only this flexible jacket is lightly captured; the plug and PCB connector must not carry a cable tug.</li>
+</ul>
+<p>The saddle follows the curved USB path and is split between the carrier and lid. A plug does not have to be pushed through a tiny printed hole. Its default groove is 0.10 mm smaller than the measured jacket diameter; set <code>cable_grip=0</code> initially when the jacket's compressibility is unknown. <strong>Use the same setting to regenerate both carrier and rear cover.</strong> Check that the jacket is held without flattening, cutting or levering the plug.</p>
+<p>The cable guidance is not an industrial strain-relief rating. Leave slack behind the stand so a moved appliance or pulled lead does not load the micro-USB connector or topple the frame.</p>
+<h2>Printing</h2>
+<p>Suggested starting point for a calibrated 0.4 mm-nozzle FDM printer:</p>
+<table>
+<thead>
+<tr>
+  <th>Part</th>
+  <th>Orientation in supplied STL</th>
+  <th>Starting settings / supports</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Front</td>
+  <td>Visible face on bed</td>
+  <td>0.16–0.20 mm layers, 4 perimeters, 5 top/bottom layers; no supports intended</td>
+</tr>
+<tr>
+  <td>Carrier</td>
+  <td>Flat grid on bed, posts upward</td>
+  <td>0.16 mm layers, 4 perimeters, 100% infill; no supports intended</td>
+</tr>
+<tr>
+  <td>Rear</td>
+  <td>Outside back face on bed, collars upward</td>
+  <td>0.16–0.20 mm layers, 4 perimeters, 5 top/bottom layers; no supports intended</td>
+</tr>
+<tr>
+  <td>Stand</td>
+  <td>Plinth on bed</td>
+  <td>0.16–0.20 mm layers, 4 perimeters, <strong>100% infill</strong>; local PLA supports beneath the front detent leaves/tips</td>
+</tr>
+<tr>
+  <td>Coupons / key</td>
+  <td>As supplied</td>
+  <td>Same filament and fit-critical settings as the final parts</td>
+</tr>
+</tbody>
+</table>
+<p>These settings have <strong>not</strong> been sliced for your printer. Inspect the layer preview, especially the stand's free-ended detent leaves, cable-channel bridges and latch tips. Use local support painting rather than filling every cavity with support. Clear all support from the cable passage before inserting a cable.</p>
+<p>A <strong>200 × 200 mm usable bed</strong> accommodates the largest 134 × 188 mm part, with a modest brim if the printer's actual usable area permits it. A 220 × 220 mm bed provides more margin. Do not scale parts to fit a smaller bed. Use filament-specific temperature settings and a clean bed; keep seams, first-layer bulges and support scars away from glass seats and mating faces.</p>
+<p>Use ordinary unfilled PLA for the first article. Print coupons in the same spool and orientation. A decorative filament's snap behaviour can differ; no blend is certified here. Prusa notes PLA's relatively brittle behaviour and low temperature resistance. [S7]</p>
+<h3>Calibration before the full build</h3>
+<p>The pin coupon has five nominal diameters, left to right along increasing X: <strong>2.40, 2.50, 2.60, 2.70, 2.80 mm</strong>. Its companion has three Ø2.75 and two Ø3.00 holes. Printed holes only indicate your printing process; they do not replace checking a real PCB hole. Gently test a suitable individual peg with the actual PCB, supporting it at the hole. A board should lower onto its posts without being forced or flexed.</p>
+<p>For the latch coupon, place the male part on the socket's open floor with the long leaf next to its rear wall and press down until the small head enters the window. The male underside ends 1 mm above the socket's print-bed plane. Release by pushing the head inward through the window. This tests a similar in-plane PLA leaf, not the entire case or stand interface. Reject cracked, whitened or permanently distorted samples.</p>
+<p>Dry-fit the four full-size printed parts <strong>without electronics</strong> before assembling the glass. All clips should engage with modest, local finger pressure. Do not compensate for a tight print by pushing harder through the screen. Correct dimensions or printing settings and reprint.</p>
+<h2>Assembly order</h2>
+<ol>
+<li>Bench-test the Pi and display. Install the microSD card and any required GPIO header before enclosure assembly. Check every dimension in the compatibility section, the FFC contact orientation, and the physical bendable regions of both flex cables.</li>
+<li>Print and test the coupons, then the four structural parts. Remove stringing and support debris; smooth only the relevant printed mating surfaces. Confirm the empty front, carrier, lid and stand fit without force.</li>
+<li>Lay the front bezel face-down on a clean, protective work surface. Lower the glass into its seat, image toward the aperture, bonded tail to the right <strong>as seen from the rear</strong>. Keep dust and printing burrs off the glass support border.</li>
+<li>Position the carrier on its four bezel locating pins. Keep the bonded tail outside the carrier's relieved side pocket. Engage the four carrier tabs using pressure on the perimeter near each clip, not the crossbars over the glass. Verify the display is not bowed or squeezed.</li>
+<li>Place the Pi, HAT and adapter on their respective four locating posts. Check every PCB sits on its standoff shoulders, not on a component or cable. The HAT's factory underside header is retained; no desoldering is assumed.</li>
+<li>Connect the panel tail to the adapter with a gentle return. Connect the 50 mm FFC and arrange the broad arched route. Insert and lock connectors according to the kit instructions. The full seated contact ends must remain straight; do not pull the bonded tail to gain reach.</li>
+<li>Connect the eight-wire HAT lead to the Pi, following the manufacturer pinout. Route it around the left side of the HAT, below its lower retention-post positions. Plug the slim micro-USB lead into <strong>PWR IN</strong>, not the data USB port, and place its jacket in the curved lower saddle.</li>
+<li>With the unit still face-down, lower the rear cover squarely. Make sure each annular collar surrounds a peg rather than landing on a component. Check the entire cable route before engaging all four lid clips. The cover must not require force to flatten a ribbon or push down a connector.</li>
+<li>Lay the external USB lead into the stand's open underside channel. Seat the case into the angled cradle and engage the two front detents. Confirm the cable is not trapped between the case and the stand and does not lift the stand off the worktop.</li>
+<li>Power up. Check a full image, then check temperature, stability, cable slack and the absence of glass pressure during normal use. Stop using the enclosure if the display changes when the frame is gently handled, a plug is under load, a latch cracks or the plastic distorts.</li>
+</ol>
+<p>For service: unplug power; support the frame; release the two stand detents and remove the case. Lay it face-down. Press the rear-cover tabs inward using the supplied PLA key and lift the cover evenly. Do not pry between glass and bezel. Release the carrier only when the screen itself needs removal. Removing the lid also removes axial retention from the PCBs.</p>
+<h2>Kitchen placement</h2>
+<p>This is a <strong>vented indoor enclosure, not splash-proof, washable or IP-rated</strong>. There is no transparent protective sheet over the display. Keep it away from the hob, oven exhaust, toaster, kettle plume, sink splashes and direct hot sunshine. Do not wash or immerse it. Prusa states that ordinary PLA can soften and deform above approximately 60°C; that is not an acceptable target operating temperature. [S7]</p>
+<p>The solid base improves the distribution of mass but cannot guarantee resistance to a cable snag or a forceful knock. Confirm stability on your actual worktop, first with the screen supported. All-PLA construction deliberately excludes elastomer anti-slip feet.</p>
+<h2>Editing and regenerating</h2>
+<p>Open <code>counterframe.scad</code>, select <code>part</code>, and use F6 to render. For a printable export choose <code>front</code>, <code>carrier</code>, <code>rear</code> or <code>stand</code>, then export STL. <code>assembly</code>, <code>exploded</code> and <code>section</code> are inspection views. Toggle <code>show_hardware</code> and <code>show_cables</code> for clarity.</p>
+<pre><code class="language-sh"># Reproduce all manufacturing STLs (OpenSCAD must be installed).
+bash export.sh
+
+# A single part, or a tolerance variant.
+openscad -o carrier.stl -D 'part=&quot;carrier&quot;' counterframe.scad
+openscad -o rear_no_grip.stl -D 'part=&quot;rear&quot;' -D 'cable_grip=0' counterframe.scad
+</code></pre>
+<p>The short FFC arch uses <code>ffc_arch_rise</code>; it is not a route for an arbitrary cable length. The most useful fit adjustments are <code>panel_t</code>, <code>panel_xy_clear</code>, <code>panel_z_clear</code>, <code>pi_peg_d</code>, <code>hat_peg_d</code>, <code>pcb_t</code>, <code>pcb_capture_clear</code>, <code>cable_d</code>, <code>cable_grip</code> and <code>fit</code>. Changing a mating dimension means regenerating <strong>all affected parts</strong>, not just one. Never shrink the glass pocket to obtain an interference fit.</p>
+<p>This is an editable design for a particular hardware arrangement, <strong>not a universally self-adapting enclosure generator</strong>. Board positions, plug keep-outs and the arched-cable route include fixed values. Substantial dimension changes require checking those features and rerunning clearance checks. The optional Python studio renderer's transforms are set for this delivered version; update them for altered dimensions. OpenSCAD's own assembly view uses the live parameters.</p>
+<h2>Validation scope</h2>
+<p><code>validation.json</code> records the checks actually completed on the exported meshes. A watertight, single-body STL is not proof that a snap fit will survive printing or use. Nominal CSG interference checks use simplified hardware keep-outs, omit small components and solder details, and intentionally allow the specified USB jacket compression. They do not measure real strength, thermal behaviour, grip, electrical safety, cable bend limits, manufacturing variation or impact resistance.</p>
+<p>Before relying on the enclosure, the remaining first-article checks are actual hardware fit; printing/slicing; latch engagement and release; no preload on the glass; fully seated, unstrained flex connectors; non-damaging USB capture; normal-use temperatures; and stability/cable-pull behaviour on the intended counter.</p>
+<h2>Manufacturer references</h2>
+<p>Dimensions were checked against these primary sources on 23 September 2026. Published component heights and a full exact mechanical model were not available in the reviewed material.</p>
+<ul>
+<li><strong>S1 — Waveshare product identification:</strong> <a href="https://www.waveshare.com/7.3inch-e-paper-hat-e.htm">https://www.waveshare.com/7.3inch-e-paper-hat-e.htm</a></li>
+<li><strong>S2 — Waveshare panel / active area / bonded tail drawing:</strong> <a href="https://www.waveshare.com/img/devkit/LCD/7.3inch-e-Paper-HAT-E/7.3inch-e-Paper-E-details-size.jpg">https://www.waveshare.com/img/devkit/LCD/7.3inch-e-Paper-HAT-E/7.3inch-e-Paper-E-details-size.jpg</a></li>
+<li><strong>S3 — Waveshare HAT and adapter mounting drawing:</strong> <a href="https://www.waveshare.com/img/devkit/LCD/7.3inch-e-Paper-HAT-E/7.3inch-e-Paper-HAT-E-details-size.jpg">https://www.waveshare.com/img/devkit/LCD/7.3inch-e-Paper-HAT-E/7.3inch-e-Paper-HAT-E-details-size.jpg</a></li>
+<li><strong>S4 — Waveshare assembly arrangement photograph:</strong> <a href="https://www.waveshare.com/img/devkit/LCD/7.3inch-e-Paper-HAT-E/7.3inch-e-Paper-HAT-E-details-5.jpg">https://www.waveshare.com/img/devkit/LCD/7.3inch-e-Paper-HAT-E/7.3inch-e-Paper-HAT-E-details-5.jpg</a></li>
+<li><strong>S5 — Raspberry Pi Zero mechanical drawing:</strong> <a href="https://datasheets.raspberrypi.com/rpizero/raspberry-pi-zero-mechanical-drawing.pdf">https://datasheets.raspberrypi.com/rpizero/raspberry-pi-zero-mechanical-drawing.pdf</a></li>
+<li><strong>S6 — Waveshare (E) manual, specifications and handling guidance:</strong> <a href="https://www.waveshare.com/wiki/7.3inch_e-Paper_HAT_(E)_Manual">https://www.waveshare.com/wiki/7.3inch_e-Paper_HAT_(E)_Manual</a></li>
+<li><strong>S7 — Prusa PLA material guidance:</strong> <a href="https://help.prusa3d.com/article/pla_2062">https://help.prusa3d.com/article/pla_2062</a></li>
+</ul>
+<p><strong>Required before the full print:</strong> confirm the exact (E) kit, obtain/check the matched 50 mm FFC, and measure the USB plug and jacket.</p>
+<p>Generated enclosure code and meshes: CC0-1.0. Manufacturer documentation, brands and trademarks remain their respective owners' material. The screen artwork is illustrative content, not supplied display software.</p>
+</section></main></body></html>

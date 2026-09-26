@@ -1,0 +1,5 @@
+numpy
+trimesh
+vtk
+Pillow>=9.2,<13
+mistune

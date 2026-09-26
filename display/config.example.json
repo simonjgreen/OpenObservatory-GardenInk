@@ -1,0 +1,23 @@
+{
+  "base_url": "",
+  "title": "The garden",
+  "timezone": "Europe/London",
+  "lookback_hours": 6,
+  "min_score": 0.75,
+  "poll_seconds": 3600,
+  "refresh_seconds": 3600,
+  "heartbeat_seconds": 3600,
+  "layout": "journal",
+  "rotate_layouts": false,
+  "rotation": 90,
+  "artwork_mode": "colour",
+  "page_size": 500,
+  "max_pages": 64,
+  "fetch_budget_seconds": 180,
+  "request_timeout_seconds": 10,
+  "busy_timeout_seconds": 120,
+  "spi_speed_hz": 4000000,
+  "cache_max_age_hours": 24,
+  "api_token_env": "OO_API_TOKEN",
+  "api_token_file": "token.txt"
+}

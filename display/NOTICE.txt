@@ -1,0 +1,71 @@
+Garden Ink - third-party source notices and artwork provenance
+================================================================
+
+Hardware adaptation
+-------------------
+Portions of gardenink/hardware.py are adapted from the Waveshare team driver:
+https://github.com/waveshareteam/e-Paper/blob/master/RaspberryPi_JetsonNano/python/lib/waveshare_epd/epd7in3e.py
+Reviewed Git blob SHA: 59fc3c0caf23fc9bc4b2becc81bf46b1cc07a3c1
+Upstream header: Author Waveshare team, V1.0, date 2022-10-20.
+GPIO backend behaviour also reviewed in epdconfig.py, Git blob:
+b390252637b94026bc649fcfcaf911ec50ce4289
+
+The following upstream permission notice applies to those portions:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+Adaptations: bounded BUSY waits; lazy GPIO setup; kernel-controlled CE0; no
+unwired GPIO18 power operation; explicit six-colour packing; deterministic
+portrait rotation; cleanup and diagnostics. The register sequence, refresh
+commands and deep-sleep command follow the reviewed (E) driver.
+
+Bird artwork
+------------
+47 decorative species illustrations are included. The original nine PNGs were
+cropped/background-cleaned from generated concept art for this project.
+Nine further illustrations were cropped from the previously supplied labelled
+Garden Ink bird sheet: rook, jackdaw, long-tailed tit, carrion crow, magpie, jay,
+starling, house sparrow and nuthatch. Their labels were excluded from the crops.
+The other 29 are original, programmatically drawn SVG illustrations created for
+this release and rasterised to PNG. Source is in artwork_sources/; the optional
+workstation build script is tools/build_extra_art.py.
+
+These are stylised decorative representations, not garden observations,
+photographs, authoritative identification plates or works attributed to a human
+natural-history artist. Anatomy and plumage are simplified; age/sex variants are
+not inferred from acoustic records. Do not use the illustrations as evidence of
+an identification. They are not downloaded from third-party bird publishers.
+
+The runtime manifest includes exact scientific-name mappings and several aliases.
+Custom PNGs retain their owners'
+terms. No external images are fetched by the running application.
+
+Font and package dependencies
+-----------------------------
+Font binaries are not included. install.sh installs DejaVu through the OS
+package manager; Pillow, spidev and gpiozero are likewise external distribution
+packages and retain their respective licences. This archive is not an operating
+system image or a universal offline bundle of compiled system dependencies.
+
+OpenObservatory
+---------------
+The client was written against the public API in simonjgreen/OpenObservatory at
+commit d71e77d0339188793df6b4a5305faf6f7c82d2c5. This is a separate client; no
+OpenObservatory source files, recordings, private station configuration or access
+tokens are bundled. Protocol/source references are in docs/API_CONTRACT.md.
