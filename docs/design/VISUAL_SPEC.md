@@ -15,7 +15,7 @@ The screen is a **480 × 800** portrait composition sent to an **800 × 480** na
 
 On 27 September 2026, the user selected **E: DejaVu Sans Regular rendered directly in monochrome** as the clear winner of a physical comparison against thresholded DejaVu Sans and both rendering methods with Noto Sans. Use upright scientific names in this treatment. The trial used 18 px common names and 14 px supporting text; do not shrink essential labels to retain the previous four-column grid. Retain the editorial serif masthead as a separate title role. See [readability rules and trial evidence](READABILITY.md).
 
-The user selected the three-card layout I. The daytime renderer uses 18 px daily common names and 14 px supporting text, wrapping instead of shrinking; exceptionally long labels receive two or one wider cards. The heading explicitly states how many species are shown, while aggregate totals retain every qualifying species.
+The user selected the three-card layout I. The daytime renderer uses 18 px daily common names and 14 px supporting text, wrapping instead of shrinking; exceptionally long labels receive two or one wider cards. The heading explicitly states how many species are shown, while aggregate totals retain every qualifying species. The night pages share direct monochrome rasterization and retain their separately designed composition and type sizes. Their output has been inspected offline; this does not establish physical night readability.
 
 ## No clock, even one labelled snapshot
 

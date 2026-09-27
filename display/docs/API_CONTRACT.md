@@ -71,3 +71,13 @@ Cached data retain their original snapshot timestamp, local date, daily boundary
 and hourly boundary. They are visibly marked cached/offline. The client does not
 claim coverage throughout a window because no historical capture-coverage query
 is made. A time with no qualifying IDs is not inferred to be a silent garden.
+
+## Optional after-dark enrichment
+
+The day scan is unchanged. With `night_mode` enabled, Garden Ink also reads:
+
+- `/api/v1/debug/pipeline`: station coordinates and current BirdNET/ultrasonic worker health. Only those fields are retained.
+- `/api/v1/detections`: separately bounded bird and generic-bat scans, preserving review/source/withdrawal filtering. Generic `ultrasonic-pass-v1` bat records do not require a species rank; their score threshold is configured separately.
+- `/api/v1/history`: frame-bounded microphone coverage, sample rates and deliberate pauses. Counts/charts are reduced from filtered raw records rather than the endpoint's roll-ups.
+
+Coverage stream `discontinuity_count` is a lifetime counter. The window's `estimated_missing_frames` is converted to a conservative duration loss; unknown-length gaps suppress completeness. Recording and worker health are checked independently before a new night transition. The API does not expose historical detector effort, so unsupported historical zeros remain gaps. Errors in this enrichment leave daytime operation available and cannot trigger a new night latch. See [night mode](../../docs/design/NIGHT_MODE.md).

@@ -158,6 +158,16 @@ def wait_for_cooldown(meta, meta_path, cfg, stop, *, push=False) -> bool:
     return False
 
 
+def choose_report(snap, cfg, meta, edition, now):
+    from .night import NIGHT_LAYOUTS, select_edition
+    layout, proposed = select_edition(snap, cfg, meta.get('night', {}), now)
+    if layout in NIGHT_LAYOUTS:
+        # A damaged/expired cache cannot supply a report for a saved latch.
+        if (snap.get('night') or {}).get('evening_date') == proposed.get('evening_date'):
+            return layout, proposed
+    return (('journal', 'gallery')[edition % 2] if cfg.rotate_layouts else cfg.layout), proposed
+
+
 def check_report(snap: dict, cfg) -> dict:
     from .render import artwork_path
     today, hour = snap['today'], snap['last_hour']
@@ -172,6 +182,7 @@ def check_report(snap: dict, cfg) -> dict:
             'refresh_seconds': cfg.refresh_seconds, 'scan': snap.get('scan', {}),
             'artwork_missing': missing, 'error': snap.get('error',''),
             'health_error': snap.get('health_error',''),
+            'night': snap.get('night', {}),
             'problems': (snap.get('health') or {}).get('problems',[])}
 
 
@@ -188,10 +199,14 @@ def main(argv=None):
                     help='Push one fresh frame, skipping hourly timing but keeping the 180-second guard; stop service first')
     ap.add_argument('--check', action='store_true', help='Read API and report both windows, no GPIO')
     ap.add_argument('--layout', choices=['journal','gallery'])
+    ap.add_argument('--night-page', choices=['rhythm','history','journal'],
+                    help='Select a night page for a preview/check only')
     ap.add_argument('--rotation', type=int, choices=[90,270])
     ap.add_argument('--verbose', action='store_true')
     ap.add_argument('--version', action='version', version=__version__)
     args = ap.parse_args(argv)
+    if args.night_page and not (args.preview or args.check):
+        ap.error('--night-page requires --preview or --check; it cannot force the panel')
     if args.refresh_now and (args.preview or args.check or args.configure):
         ap.error('--refresh-now cannot be combined with --preview, --check or --configure')
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
@@ -266,12 +281,24 @@ def main(argv=None):
             if art_refresh:
                 LOG.info('Relevant artwork available; redrawing the displayed %s report', layout)
             elif args.demo:
-                from .demo import demo_snapshot
-                snap = demo_snapshot(cfg)
+                if args.night_page:
+                    from .night_demo import demo_night_snapshot
+                    snap = demo_night_snapshot(cfg)
+                else:
+                    from .demo import demo_snapshot
+                    snap = demo_snapshot(cfg)
             else:
                 try:
                     snap = client.fetch()
-                    if not args.check:
+                    if cfg.night_mode:
+                        from .night_client import enrich_snapshot
+                        snap = enrich_snapshot(client, snap, cfg)
+                        if not (snap.get('night') or {}).get('available'):
+                            previous = cached_or_empty(cache, cfg, 'Night data unavailable')
+                            old_night = previous.get('night') or {}
+                            if old_night.get('evening_date') == (meta.get('night') or {}).get('evening_date') and old_night:
+                                snap['night'] = dict(old_night, available=False, cached=True)
+                    if not (args.check or args.preview):
                         atomic_json(cache, snap)
                 except APIError as exc:
                     LOG.warning('%s', exc)
@@ -287,7 +314,11 @@ def main(argv=None):
             if stop.is_set(): break
             from .render import render
             if not art_refresh:
-                layout = ('journal','gallery')[edition%2] if cfg.rotate_layouts else cfg.layout
+                layout, proposed_night = choose_report(snap, cfg, meta, edition, utcnow())
+                if args.night_page:
+                    if not (snap.get('night') or {}).get('evening_date'):
+                        raise ValueError('No night report available for this preview; use --demo for sample pages')
+                    layout = 'night-' + args.night_page
             # Capture before rendering so an arrival during rendering is never lost.
             frame_missing = missing_artwork(snap, layout)
             frame = render(snap, cfg, layout)
@@ -316,6 +347,7 @@ def main(argv=None):
             cycle += 1
             if not art_refresh:
                 edition += 1
+                meta['night'] = proposed_night
                 report_at = (next_hour(time.time(), cfg.timezone) if hourly
                              else meta['attempted_at'] + cfg.refresh_seconds)
             missing = frame_missing

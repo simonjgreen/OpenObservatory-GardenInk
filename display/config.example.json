@@ -19,5 +19,15 @@
   "spi_speed_hz": 4000000,
   "cache_max_age_hours": 24,
   "api_token_env": "OO_API_TOKEN",
-  "api_token_file": "token.txt"
+  "api_token_file": "token.txt",
+  "night_mode": true,
+  "latitude": null,
+  "longitude": null,
+  "bat_min_score": 0.5,
+  "night_bird_ratio": 0.25,
+  "night_bird_quiet_count": 2,
+  "night_bat_count": 10,
+  "night_bat_bins": 3,
+  "night_coverage_fraction": 0.9,
+  "night_max_pages": 128
 }

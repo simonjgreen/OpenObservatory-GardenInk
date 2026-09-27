@@ -87,3 +87,9 @@ Deleting the ledger or cooldown is not a supported fix for a failing request or 
 ## Hardware/software boundary
 
 The case uses an eight-wire SPI/power connection, not a HAT stacked on the Pi's 40-pin header. Power is one external micro-USB connection to Pi PWR IN. Device bounds and cable geometry in CAD are nominal approximations. The wiring authority for this project is [mechanical guide](design/MECHANICAL.md), the vendor references in the construction guide, not the simplified wire colours in the CAD render.
+
+## After-dark reports
+
+`solar.py` calculates local sunset/sunrise instants. `night_client.py` adds bounded, filtered night scans using the existing read-only transport; `night.py` owns bat policy, recording coverage, reduction and pure edition selection. `night_render.py` renders the three portrait pages, with `night_demo.py` supplying labelled offline fixtures. The day client remains independent for artwork-worker compatibility.
+
+The display stores its night latch/page under `night` in `state/display.json` only after a successful hardware refresh. An attempted frame still saves its physical cooldown first. Artwork-only redraws retain the report and page. Failed night reads can retain the original cached night bounds, explicitly labelled as cached. Missing data cannot create a latch. See [night mode](design/NIGHT_MODE.md).

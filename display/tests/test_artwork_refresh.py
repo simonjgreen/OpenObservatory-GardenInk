@@ -20,7 +20,7 @@ class ArtworkRefreshTests(unittest.TestCase):
                     start=1000, stop_at=3650, during_render=False, refresh_seconds=3600,
                     render_jump=None, fail_art=False, display_seconds=40):
         cfg = Settings(base_url='http://station.example', layout=layout,
-                       rotate_layouts=rotate, refresh_seconds=refresh_seconds)
+                       rotate_layouts=rotate, refresh_seconds=refresh_seconds, night_mode=False)
         clock = Clock(start)
         elapsed = [0]
         snap = demo_snapshot(cfg)

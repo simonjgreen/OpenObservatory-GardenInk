@@ -8,6 +8,7 @@ Garden Ink 2.1 provides an hourly, no-clock journal from a separate Open Observa
 |---|---|---|
 | Station client | Read-only bounded scan; today/hour aggregation; source/review filtering; partial totals | Recheck the API contract when upgrading the station |
 | Display | HAT (E) driver, startup/manual pushed frames, on-the-hour scheduled reports, relevant-artwork redraws, persistent refresh guard, strong colour wash, controller sleep, portrait no-clock layout | Long-run reliability, live verification of artwork-triggered redraws and physical readability across lighting conditions |
+| After dark | Sunset/quiet-bird/bat-or-owl entry; persisted sunrise latch; three illustrated hourly pages; filtered bat records and matched-window history | Verify a real dusk transition and physical night-page readability; historical zero windows lack detector-effort proof |
 | Services | Display and optional artwork units; unit validation before installation | Confirm unattended startup/recovery on the deployed Pi |
 | Pi artwork worker | Disabled by default; up to two workers; durable request reservations and uncertainty handling | Paid operation and low-memory behaviour require a separately authorised device trial |
 | Workstation studio | Serial generation, recovery, review, approval and export | Existing paid collection must be imported; parallel generation is not implemented |
@@ -18,7 +19,7 @@ Garden Ink 2.1 provides an hourly, no-clock journal from a separate Open Observa
 
 1. **Content quality:** clearer summaries while preserving acoustic identification and coverage semantics.
 2. **Refresh methodology:** verify on-the-hour scheduling on the deployed Pi, retaining persisted hardware cooldown, DST and midnight correctness.
-3. **Readability:** direct monochrome DejaVu Sans and three daily cards selected in physical trials; continue checking longer live labels and varied lighting.
+3. **Readability:** selected direct monochrome DejaVu Sans and three daily cards in physical trials; continue checking longer live labels and physical night-page readability.
 4. **Power consumption:** measure the complete device. Controller sleep does not suspend the Pi; no battery-life claim is established.
 5. **Art style:** complete a consistent robin-reference collection, with human review of anatomy and species markings.
 

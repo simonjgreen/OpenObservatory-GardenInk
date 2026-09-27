@@ -19,6 +19,7 @@ Credit to [arnegiacomo](https://github.com/arnegiacomo) and Fugleramme for the e
 - Shows the latest qualifying identification from the last hour, alongside three other frequent species heard today, with wider cards for unusually long names.
 - Refreshes on startup, then starts scheduled updates on the hour. `./service.sh refresh` requests an update between scheduled reports; startup and manual pushes retain a saved three-minute minimum between panel attempts. It shows the date and when things were heard; a clock that is wrong for most of the hour would be fairly unhelpful.
 - Counts qualifying acoustic detections, with the station's review decisions and source filtering respected. Today starts at local midnight, including when the clocks change. If a scan is incomplete, the totals say so.
+- Switches to a three-page bat and owl carousel after sunset when daytime bird detections fall and sustained bat activity or an owl is heard. It keeps the night edition until sunrise, with an owl portrait and bat illustration throughout. See [night mode](docs/design/NIGHT_MODE.md).
 - Uses a Waveshare 7.3-inch Spectra 6 **HAT (E)** in 480 × 800 portrait orientation.
 - Runs locally with cached artwork. Optional paid image generation is separate and disabled by default.
 - Redraws the current page when one of its missing illustrations becomes available, retaining the three-minute panel guard and the regular report schedule.

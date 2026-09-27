@@ -31,6 +31,16 @@ class Settings:
     cache_max_age_hours: int = 24
     api_token_env: str = "OO_API_TOKEN"
     api_token_file: str = "token.txt"
+    night_mode: bool = True
+    latitude: float | None = None
+    longitude: float | None = None
+    bat_min_score: float = 0.5
+    night_bird_ratio: float = 0.25
+    night_bird_quiet_count: int = 2
+    night_bat_count: int = 10
+    night_bat_bins: int = 3
+    night_coverage_fraction: float = 0.9
+    night_max_pages: int = 128
 
     def validate(self, require_url: bool = True) -> 'Settings':
         for key in ('base_url','timezone','layout','artwork_mode','api_token_env','api_token_file'):
@@ -49,12 +59,16 @@ class Settings:
             'max_pages': (1, 256), 'fetch_budget_seconds': (10, 600), 'request_timeout_seconds': (1, 120),
             'busy_timeout_seconds': (30, 300), 'spi_speed_hz': (100000, 4000000),
             'cache_max_age_hours': (1, 168),
+            'bat_min_score': (0, 1), 'night_bird_ratio': (0, 1),
+            'night_bird_quiet_count': (0, 1000), 'night_bat_count': (1, 10000),
+            'night_bat_bins': (1, 6), 'night_coverage_fraction': (0.5, 1),
+            'night_max_pages': (1, 512),
         }
         for key, (lo, hi) in limits.items():
             val = getattr(self, key)
             if isinstance(val, bool) or not isinstance(val, (int, float)) or not lo <= val <= hi:
                 raise ValueError('%s must be between %s and %s' % (key, lo, hi))
-            if key != 'min_score' and not isinstance(val, int):
+            if key not in ('min_score', 'bat_min_score', 'night_bird_ratio', 'night_coverage_fraction') and not isinstance(val, int):
                 raise ValueError('%s must be an integer' % key)
 
         if self.layout not in ('journal', 'gallery'):
@@ -65,6 +79,16 @@ class Settings:
             raise ValueError('artwork_mode must be colour or ink')
         if not isinstance(self.rotate_layouts, bool):
             raise ValueError('rotate_layouts must be true or false')
+        if not isinstance(self.night_mode, bool):
+            raise ValueError('night_mode must be true or false')
+        import math
+        for key, bound in (('latitude', 90), ('longitude', 180)):
+            value = getattr(self, key)
+            if value is not None and (isinstance(value, bool) or not isinstance(value, (int, float))
+                                      or not math.isfinite(value) or not -bound <= value <= bound):
+                raise ValueError('%s must be a finite coordinate' % key)
+        if (self.latitude is None) != (self.longitude is None):
+            raise ValueError('Set both latitude and longitude, or neither')
         if not isinstance(self.title, str) or not 1 <= len(self.title) <= 50:
             raise ValueError('title must contain 1–50 characters')
         return self
@@ -82,7 +106,10 @@ class Settings:
     def identity(self) -> str:
         import hashlib
         value = ['hourly-v2', self.base_url, self.timezone, self.min_score,
-                 self.page_size, self.max_pages, self.fetch_budget_seconds]
+                 self.page_size, self.max_pages, self.fetch_budget_seconds,
+                 self.night_mode, self.latitude, self.longitude, self.bat_min_score,
+                 self.night_bird_ratio, self.night_bird_quiet_count,
+                 self.night_bat_count, self.night_bat_bins, self.night_coverage_fraction]
         return hashlib.sha256(json.dumps(value).encode()).hexdigest()
 
 

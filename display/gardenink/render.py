@@ -216,6 +216,9 @@ def selections(snap):
 
 def illustrated_species(snap, layout):
     """Species with image slots on this page, excluding text-only mentions."""
+    if layout in ('night-rhythm', 'night-history', 'night-journal'):
+        from .night_render import featured_owl, GUIDE_OWL
+        return [featured_owl(snap.get('night') or {}) or GUIDE_OWL]
     if layout == 'gallery':
         return snap['today']['species'][:6]
     feature, daily = selections(snap)
@@ -318,6 +321,9 @@ def status_line(p, snap):
 def render(snapshot: dict, settings, layout=None) -> Image.Image:
     _load_art.cache_clear()
     manifest.cache_clear()
+    if layout in ('night-rhythm', 'night-history', 'night-journal'):
+        from .night_render import render_night
+        return render_night(snapshot, settings, layout)
     p = Page()
     z = ZoneInfo(settings.timezone)
     now = timestamp(snapshot['as_of']).astimezone(z)
