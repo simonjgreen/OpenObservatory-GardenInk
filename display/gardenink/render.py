@@ -209,6 +209,14 @@ def selections(snap):
     return feature, others[:4]
 
 
+def illustrated_species(snap, layout):
+    """Species with image slots on this page, excluding text-only mentions."""
+    if layout == 'gallery':
+        return snap['today']['species'][:6]
+    feature, daily = selections(snap)
+    return ([feature] if feature else []) + daily
+
+
 def garden_vignette(p, x, y, w, h):
     """Small procedural woodcut-style hedgerow; decoration, never a data chart."""
     import random

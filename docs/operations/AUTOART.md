@@ -24,13 +24,13 @@ If a valid saved key exists, it is reused. Use `./autoart.sh enable --replace-ke
 ### How it works
 
 1. Use your already-filtered real-microphone bird identifications, respecting the display's score and human-review handling.
-2. Require at least **three qualifying detection records** in today/the hour for unreviewed species; a reviewed latest identification can bypass this extra generation gate. This limits spending on isolated guesses; it does not prove an identification correct.
+2. Queue missing artwork on the **first qualifying detection record** seen in a successful display report. This retains source, score, review and withdrawal filtering; it does not prove an identification correct. `min_detections` defaults to 1. An explicitly configured higher threshold is still respected, with a reviewed latest identification able to bypass it. Existing installations must set `min_detections` to 1 in `autoart.json` to adopt the new default. The worker retains its durable request limits, global spacing and no-automatic-retry policy.
 3. Resolve scientific-name aliases and look for an existing custom, automatically cached or bundled image. Existing artwork is **not regenerated**. This is gap filling, not a replacement for installing the consistent collection you already generated.
 4. Prioritise the main illustration and four daily cards, then other qualifying species encountered in the two windows.
 5. Queue once per canonical species in SQLite. Fresh observations refresh eligibility but never reset a completed, failed, rejected or uncertain job. Jobs not observed in the preceding 24 hours, or belonging to an old station/filter configuration, do not start automatically.
 6. A separate process performs the image edit using the **same original robin PNG** and the same original style brief. Every request also asks for one bird with exactly two legs and at most two visible feet. Completed images never become the next style reference.
 7. Keep the raw response and preparation metadata, prepare a white-background PNG, and publish it atomically to the local generated-art cache. A suspect clipped/full-background image is held for inspection instead of being auto-published.
-8. A published image is picked up at the **next scheduled hourly display refresh**. Generation never blocks the current refresh and never triggers an additional physical refresh.
+8. The running display checks every 30 seconds for newly available illustrations in the page it is showing: the main bird and four daily cards in the journal, or the six gallery cards. Relevant artwork triggers a redraw of that same historical report and layout, retaining the saved **180-second minimum between panel attempts**. Arrivals during that guard are combined, identical frames are skipped, and the next scheduled report takes priority. Artwork for other species waits until a report includes it. Review candidates do not trigger redraws. Generation never blocks the display, and the worker itself never drives the panel.
 
 ### What leaves the Pi
 
@@ -51,7 +51,7 @@ Default settings in `autoart.json`:
   "max_requests_per_24h": 2,
   "max_requests_total": 20,
   "workers": 2,
-  "min_detections": 3,
+  "min_detections": 1,
   "timeout_seconds": 1200,
   "auto_publish": true
 }

@@ -23,7 +23,7 @@ from .image_request import api_edit, normalise, ApiFailure, request_fingerprint
 LOG=logging.getLogger('gardenink.autoart')
 DEFAULTS={'enabled':False, 'model':'gpt-image-2-2026-04-21',
           'max_requests_per_24h':2, 'max_requests_total':20, 'workers':2,
-          'min_detections':3, 'timeout_seconds':1200, 'auto_publish':True}
+          'min_detections':1, 'timeout_seconds':1200, 'auto_publish':True}
 
 
 def settings_path(): return ROOT/'autoart.json'
@@ -203,7 +203,7 @@ def enqueue_snapshot(snap,display_cfg):
         if slug in seen: continue
         seen.add(slug)
         # The queue only sees already filtered, real-microphone identifications.
-        # A second modest repetition gate limits one-off false-positive spending.
+        # Default to the first qualifying record; honour an explicit higher gate.
         count=max([int(b.get('count',0)) for w in ('today','last_hour') for b in snap[w]['species']
                    if b['scientific_name'].casefold()==bird['scientific_name'].casefold()] or [0])
         if count<cfg['min_detections'] and not bird.get('reviewed'): continue
@@ -238,7 +238,7 @@ def process(store,job,cfg,key,request=api_edit):
         state=publish(store,job,cfg,raw)
         # Preserve provider request ID after local publication updates the row.
         store.finish(job,state,store.job(job['slug'])['message'],metadata.get('request_id',''))
-        LOG.info('Illustration %s: %s; display will use its next scheduled edition',job['scientific'],state)
+        LOG.info('Illustration %s: %s; published art is available for relevant display redraws',job['scientific'],state)
     except ApiFailure as exc:
         store.finish(job,'uncertain' if exc.uncertain else 'failed',str(exc),exc.request_id)
         if exc.status in (400,401,403,404,429):

@@ -69,7 +69,8 @@ def refresh_delay(meta: dict, cfg, wall: float, *, push=False) -> float:
     if not previous:
         return 0.0
     interval = cfg.refresh_seconds if meta.get('attempt_version') in ('2.0.0', __version__) else 180
-    if push or (meta.get('attempt_kind') == 'push' and cfg.refresh_seconds == 3600):
+    if (push or meta.get('attempt_kind') == 'artwork' or
+            (meta.get('attempt_kind') == 'push' and cfg.refresh_seconds == 3600)):
         interval = 180
     elapsed = max(0.0, wall - previous)
     return max(0.0, interval - elapsed)
@@ -88,23 +89,55 @@ def next_hour(wall: float, timezone: str) -> float:
 
 
 def wait_for_hour(cfg, stop) -> bool:
+    reason, _ = wait_for_update(cfg, stop)
+    return reason == 'scheduled'
+
+
+def wait_for_update(cfg, stop, artwork_ready=None, scheduled_at=None,
+                    previous_wall=None, previous_monotonic=None):
+    """Wait for a report deadline or relevant art; the report always wins ties."""
     wall = time.time()
-    target = next_hour(wall, cfg.timezone)
+    target = next_hour(wall, cfg.timezone) if scheduled_at is None else scheduled_at
+    if previous_wall is not None:
+        elapsed = time.monotonic() - previous_monotonic
+        # A slow redraw can legitimately cross its deadline. Only a clock
+        # correction should move that pending report to a new boundary.
+        if wall < previous_wall or abs(wall - previous_wall - elapsed) > 30:
+            target = (next_hour(wall, cfg.timezone) if cfg.refresh_seconds == 3600
+                      else wall + cfg.refresh_seconds)
     LOG.info('Next scheduled update at %s',
              datetime.fromtimestamp(target, ZoneInfo(cfg.timezone)).isoformat())
     while not stop.is_set():
         remaining = target - wall
         if remaining <= 0:
-            return True
+            return 'scheduled', target
+        if artwork_ready is not None and artwork_ready():
+            return 'artwork', target
         if stop.wait(min(remaining, 30)):
-            return False
+            return None, target
         current = time.time()
-        # Re-anchor after clock corrections or a suspended process, without
-        # replaying missed editions. Small scheduler lateness is normal.
         if current < wall or current > target + 30:
-            target = next_hour(current, cfg.timezone)
+            target = (next_hour(current, cfg.timezone) if cfg.refresh_seconds == 3600
+                      else current + cfg.refresh_seconds)
         wall = current
-    return False
+    return None, target
+
+
+def missing_artwork(snap, layout):
+    from .render import artwork_path, illustrated_species
+    return [bird for bird in illustrated_species(snap, layout) if artwork_path(bird) is None]
+
+
+def artwork_ready(missing, meta, meta_path, cfg):
+    from .render import artwork_path
+    if not any(artwork_path(bird) is not None for bird in missing):
+        return False
+    wall = time.time()
+    # Apply the same backward-clock protection as the final hardware guard.
+    if meta.get('attempted_at', 0) > wall:
+        meta['attempted_at'] = wall
+        atomic_json(meta_path, meta)
+    return refresh_delay(meta, cfg, wall, push=True) <= 0
 
 
 def wait_for_cooldown(meta, meta_path, cfg, stop, *, push=False) -> bool:
@@ -194,17 +227,30 @@ def main(argv=None):
     meta_path = state/'display.json'
     meta = read_meta(meta_path)
     cycle = int(meta.get('cycle', 0))
+    edition = int(meta.get('edition', cycle))
     try:
         first_frame = True
+        missing = []
+        report_at = None
+        previous_wall = None
+        previous_monotonic = None
         while not stop.is_set():
+            art_refresh = False
             push = hardware and (args.refresh_now or (first_frame and not args.once))
             # Wait BEFORE querying the station or rendering. A manual --once after
             # an earlier frame must not display a snapshot fetched an hour ago.
             if push:
                 LOG.info('Fresh frame requested; honouring the saved 180-second panel guard')
                 if not wait_for_cooldown(meta, meta_path, cfg, stop, push=True): break
-            elif hourly:
-                if not wait_for_hour(cfg, stop): break
+            elif hardware and not single_frame:
+                reason, report_at = wait_for_update(
+                    cfg, stop, lambda: artwork_ready(missing, meta, meta_path, cfg),
+                    report_at, previous_wall, previous_monotonic)
+                previous_wall = time.time()
+                previous_monotonic = time.monotonic()
+                if reason is None: break
+                art_refresh = reason == 'artwork'
+                push = art_refresh
             elif hardware:
                 wall = time.time()
                 try: previous = float(meta.get('attempted_at', 0))
@@ -217,7 +263,9 @@ def main(argv=None):
                 if remaining > 0:
                     LOG.info('Next hourly update in %.0fs (Ctrl-C exits safely)', remaining)
                     if stop.wait(remaining): break
-            if args.demo:
+            if art_refresh:
+                LOG.info('Relevant artwork available; redrawing the displayed %s report', layout)
+            elif args.demo:
                 from .demo import demo_snapshot
                 snap = demo_snapshot(cfg)
             else:
@@ -238,8 +286,15 @@ def main(argv=None):
                 return 2 if snap.get('offline') else 0
             if stop.is_set(): break
             from .render import render
-            layout = ('journal','gallery')[cycle%2] if cfg.rotate_layouts else cfg.layout
+            if not art_refresh:
+                layout = ('journal','gallery')[edition%2] if cfg.rotate_layouts else cfg.layout
+            # Capture before rendering so an arrival during rendering is never lost.
+            frame_missing = missing_artwork(snap, layout)
             frame = render(snap, cfg, layout)
+            frame_hash = hashlib.sha256(frame.tobytes()).hexdigest()
+            if art_refresh and frame_hash == meta.get('frame_hash'):
+                missing = frame_missing
+                continue
             out = args.output or state/'latest.png'
             atomic_image(out, frame)
             if args.preview:
@@ -247,19 +302,25 @@ def main(argv=None):
                 return 2 if snap.get('offline') else 0
             # Recheck after fetching as well: a clock correction during a scan
             # must not let a push or scheduled frame escape the persisted guard.
-            if (hourly or push) and not wait_for_cooldown(meta, meta_path, cfg, stop, push=push): break
+            if ((hardware and not single_frame) or push) and not wait_for_cooldown(
+                    meta, meta_path, cfg, stop, push=push): break
             # Persist BEFORE imports/initialisation, so even setup failures or
             # restarts cannot hammer the panel. Existing v1 hardware is unchanged.
             meta.update({'attempted_at': time.time(), 'attempt_version': __version__,
-                         'attempt_kind': 'push' if push else 'scheduled'})
+                         'attempt_kind': 'artwork' if art_refresh else 'push' if push else 'scheduled'})
             atomic_json(meta_path, meta)
             first_frame = False
             from .hardware import display
             LOG.info('Refreshing panel (%s); full refresh flashing is expected', layout)
             display(frame, cfg)
             cycle += 1
-            meta.update({'success_at': time.time(), 'cycle': cycle, 'snapshot_at': snap['as_of'],
-                         'version': __version__, 'frame_hash': hashlib.sha256(frame.tobytes()).hexdigest()})
+            if not art_refresh:
+                edition += 1
+                report_at = (next_hour(time.time(), cfg.timezone) if hourly
+                             else meta['attempted_at'] + cfg.refresh_seconds)
+            missing = frame_missing
+            meta.update({'success_at': time.time(), 'cycle': cycle, 'edition': edition,
+                         'snapshot_at': snap['as_of'], 'version': __version__, 'frame_hash': frame_hash})
             atomic_json(meta_path, meta)
             if hourly:
                 LOG.info('Panel asleep. Next report is scheduled on the hour.')
@@ -267,7 +328,7 @@ def main(argv=None):
                 LOG.info('Panel asleep. Refresh cadence: %ss.', cfg.refresh_seconds)
             # Queue only after a real frame succeeds: preview/check/demo never spend.
             # This is metadata-only; a separate worker owns HTTPS and image decoding.
-            if not args.demo:
+            if not args.demo and not art_refresh:
                 try:
                     from .autoart import enqueue_snapshot
                     added = enqueue_snapshot(snap, cfg)

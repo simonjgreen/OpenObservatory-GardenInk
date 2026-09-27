@@ -21,6 +21,7 @@ Credit to [arnegiacomo](https://github.com/arnegiacomo) and Fugleramme for the e
 - Counts qualifying acoustic detections, with the station's review decisions and source filtering respected. Today starts at local midnight, including when the clocks change. If a scan is incomplete, the totals say so.
 - Uses a Waveshare 7.3-inch Spectra 6 **HAT (E)** in 480 × 800 portrait orientation.
 - Runs locally with cached artwork. Optional paid image generation is separate and disabled by default.
+- Redraws the current page when one of its missing illustrations becomes available, retaining the three-minute panel guard and the regular report schedule.
 
 One bird can produce plenty of detections, so the numbers aren't a count of individual birds or visits.
 

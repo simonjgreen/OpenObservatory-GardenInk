@@ -87,7 +87,17 @@ class QueueTests(Isolated):
         self.assertNotIn('reveal location',prompt);self.assertNotIn('station.example',prompt)
     def test_display_filter_gate_and_missing_image(self):
         self.assertEqual(a.enqueue_snapshot(self.fetch_snap(),self.display),1)
-    def test_single_unreviewed_detection_not_charged(self):
+    def test_first_qualifying_detection_queues_one_request(self):
+        snap=self.fetch_snap(count=1)
+        self.assertEqual(a.enqueue_snapshot(snap,self.display),1)
+        self.assertEqual(a.enqueue_snapshot(snap,self.display),0)
+        job=self.claim()
+        self.assertIsNotNone(job)
+        a.process(self.store,job,self.cfg,'test-key',request=lambda *args:(png(),{}))
+        self.assertEqual(self.store.job(job['slug'])['status'],'ready')
+        self.assertEqual(self.store.budget()['attempts_total'],1)
+    def test_explicit_higher_detection_threshold_is_respected(self):
+        a.save_settings({**self.cfg,'min_detections':3})
         self.assertEqual(a.enqueue_snapshot(self.fetch_snap(count=1),self.display),0)
     def test_reviewed_single_detection_allowed(self):
         self.assertEqual(a.enqueue_snapshot(self.fetch_snap(count=1,reviewed=True),self.display),1)
