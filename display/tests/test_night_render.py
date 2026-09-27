@@ -166,7 +166,9 @@ class NightRenderTests(unittest.TestCase):
             dict(start_hour=2, end_hour=3, count=None, median=20),
         ]}, (50, 200, 360, 160), baseline=True)
         # A spurious line joining the two medians would cross this central gap.
-        self.assertEqual(set(page.im.crop((180, 220, 280, 310)).get_flattened_data()), {(255, 255, 255)})
+        crop = page.im.crop((180, 220, 280, 310))
+        pixels = crop.get_flattened_data() if hasattr(crop, 'get_flattened_data') else crop.getdata()
+        self.assertEqual(set(pixels), {(255, 255, 255)})
 
 
 if __name__ == '__main__':
