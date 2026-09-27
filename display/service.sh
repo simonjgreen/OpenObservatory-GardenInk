@@ -103,11 +103,16 @@ case "$ACTION" in
         diagnostics; exit 1
     fi
     echo 'Installed, enabled at boot, and currently active.'
-    echo 'The application still respects its saved one-hour display cooldown.'
+    echo 'Startup requests a fresh frame, respecting the saved 180-second panel guard.'
     echo 'Logs: ./service.sh logs  |  Diagnose: ./service.sh diagnose'
     "${SUDO[@]}" systemctl --no-pager --full status "$NAME"
     ;;
   start|stop|restart) "${SUDO[@]}" systemctl "$ACTION" "$NAME" ;;
+  refresh)
+    "${SUDO[@]}" systemctl restart "$NAME"
+    echo 'Fresh frame requested. The service keeps the saved 180-second panel guard.'
+    echo 'Follow completion with: ./service.sh logs'
+    ;;
   status) "${SUDO[@]}" systemctl --no-pager --full status "$NAME" ;;
   logs) "${SUDO[@]}" journalctl -u "$NAME" -f ;;
   diagnose) diagnostics ;;
@@ -117,5 +122,5 @@ case "$ACTION" in
     "${SUDO[@]}" systemctl daemon-reload
     echo 'Service removed. Application, credentials, state and screen image retained.'
     ;;
-  *) echo 'Usage: ./service.sh install|verify|print-unit|start|stop|restart|status|logs|diagnose|remove' >&2; exit 2 ;;
+  *) echo 'Usage: ./service.sh install|verify|print-unit|start|stop|restart|refresh|status|logs|diagnose|remove' >&2; exit 2 ;;
 esac

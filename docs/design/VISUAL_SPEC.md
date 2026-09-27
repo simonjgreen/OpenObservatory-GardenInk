@@ -27,6 +27,8 @@ Style: fine black feather hatching, natural proportions, restrained coloured was
 
 The renderer targets black, white, yellow, red, blue and green. Grey feather detail is deliberately rendered as black/white patterning rather than unconstrained coloured dithering. Physical pigment appearance, lighting and photography do not match RGB perfectly. Current PNG previews are real software output; AI concepts are design inspiration, not pixel-accurate test evidence.
 
+The selected colour treatment is **strong wash** (27 September 2026). It preserves the existing black detail and spot colours, then fills approximately 70% of eligible white gaps within light, chromatic source regions using an ordered pattern. Neutral and dark source regions remain unchanged; `artwork_mode: ink` remains monochrome. This increases coloured area without regenerating artwork. The choice matches option C of the original-robin comparison at the runtime's 232 × 210 main and 102 × 100 thumbnail boxes. It was applied to the test installation with a private backup and the saved cooldown preserved; physical colour appearance still requires the user's assessment.
+
 ## Visual references
 
 - `design/concepts/04-selected-editorial-target.png`: chosen composition; disregard its clock and any sightings/visits terminology.

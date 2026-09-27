@@ -1,5 +1,6 @@
 from __future__ import annotations
 import argparse
+from datetime import datetime
 import hashlib
 import json
 import logging
@@ -10,6 +11,7 @@ import sys
 import threading
 import tempfile
 import time
+from zoneinfo import ZoneInfo
 from .config import ROOT, load, save
 from . import __version__
 from .client import Client, APIError
@@ -51,12 +53,14 @@ def read_meta(path):
     except (OSError,ValueError):return {}
 
 
-def refresh_delay(meta: dict, cfg, wall: float) -> float:
+def refresh_delay(meta: dict, cfg, wall: float, *, push=False) -> float:
     """Restart-persistent, start-to-start display cooldown.
 
     The first v2 frame may replace an old v1 frame after the existing 180-second
     hardware guard, so an upgrade doesn't make its first preview wait an hour.
-    Subsequent attempts (including failed attempts) use the configured hour.
+    Scheduled attempts use the configured interval. Explicit pushes and service
+    startup retain the 180-second guard. After a push, the next scheduled frame
+    may return to the clock-hour schedule after that same minimum guard.
     """
     try:
         previous = float(meta.get('attempted_at', 0))
@@ -65,8 +69,60 @@ def refresh_delay(meta: dict, cfg, wall: float) -> float:
     if not previous:
         return 0.0
     interval = cfg.refresh_seconds if meta.get('attempt_version') in ('2.0.0', __version__) else 180
+    if push or (meta.get('attempt_kind') == 'push' and cfg.refresh_seconds == 3600):
+        interval = 180
     elapsed = max(0.0, wall - previous)
     return max(0.0, interval - elapsed)
+
+
+def next_hour(wall: float, timezone: str) -> float:
+    """First local HH:00 at or after wall, traversing DST in timestamp order."""
+    zone = ZoneInfo(timezone)
+    candidate = wall
+    while True:
+        local = datetime.fromtimestamp(candidate, zone)
+        elapsed = local.minute * 60 + local.second + local.microsecond / 1e6
+        if elapsed == 0:
+            return candidate
+        candidate += 3600 - elapsed
+
+
+def wait_for_hour(cfg, stop) -> bool:
+    wall = time.time()
+    target = next_hour(wall, cfg.timezone)
+    LOG.info('Next scheduled update at %s',
+             datetime.fromtimestamp(target, ZoneInfo(cfg.timezone)).isoformat())
+    while not stop.is_set():
+        remaining = target - wall
+        if remaining <= 0:
+            return True
+        if stop.wait(min(remaining, 30)):
+            return False
+        current = time.time()
+        # Re-anchor after clock corrections or a suspended process, without
+        # replaying missed editions. Small scheduler lateness is normal.
+        if current < wall or current > target + 30:
+            target = next_hour(current, cfg.timezone)
+        wall = current
+    return False
+
+
+def wait_for_cooldown(meta, meta_path, cfg, stop, *, push=False) -> bool:
+    """Keep the physical guard independent of the hourly report schedule."""
+    while not stop.is_set():
+        wall = time.time()
+        try: previous = float(meta.get('attempted_at', 0))
+        except (ValueError, TypeError): previous = 0
+        if previous > wall:
+            LOG.warning('Pi clock moved backwards; restarting the safe refresh interval')
+            meta['attempted_at'] = wall
+            atomic_json(meta_path, meta)
+        remaining = refresh_delay(meta, cfg, wall, push=push)
+        if remaining <= 0:
+            return True
+        if stop.wait(min(remaining, 30)):
+            return False
+    return False
 
 
 def check_report(snap: dict, cfg) -> dict:
@@ -95,12 +151,16 @@ def main(argv=None):
     ap.add_argument('--preview', action='store_true', help='Write a PNG; no GPIO and no cooldown')
     ap.add_argument('--output', type=Path, help='PNG output (default state/latest.png)')
     ap.add_argument('--once', action='store_true', help='One physical frame, respecting cooldown')
+    ap.add_argument('--refresh-now', action='store_true',
+                    help='Push one fresh frame, skipping hourly timing but keeping the 180-second guard; stop service first')
     ap.add_argument('--check', action='store_true', help='Read API and report both windows, no GPIO')
     ap.add_argument('--layout', choices=['journal','gallery'])
     ap.add_argument('--rotation', type=int, choices=[90,270])
     ap.add_argument('--verbose', action='store_true')
     ap.add_argument('--version', action='version', version=__version__)
     args = ap.parse_args(argv)
+    if args.refresh_now and (args.preview or args.check or args.configure):
+        ap.error('--refresh-now cannot be combined with --preview, --check or --configure')
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
                         format='%(asctime)s %(levelname)s %(message)s')
     cfg = load(args.config)
@@ -128,15 +188,24 @@ def main(argv=None):
     signal.signal(signal.SIGINT, stopping)
     signal.signal(signal.SIGTERM, stopping)
     hardware = not (args.preview or args.check)
+    single_frame = args.once or args.refresh_now
+    hourly = hardware and not single_frame and cfg.refresh_seconds == 3600
     lockfd = lock_display() if hardware else None
     meta_path = state/'display.json'
     meta = read_meta(meta_path)
     cycle = int(meta.get('cycle', 0))
     try:
+        first_frame = True
         while not stop.is_set():
+            push = hardware and (args.refresh_now or (first_frame and not args.once))
             # Wait BEFORE querying the station or rendering. A manual --once after
             # an earlier frame must not display a snapshot fetched an hour ago.
-            if hardware:
+            if push:
+                LOG.info('Fresh frame requested; honouring the saved 180-second panel guard')
+                if not wait_for_cooldown(meta, meta_path, cfg, stop, push=True): break
+            elif hourly:
+                if not wait_for_hour(cfg, stop): break
+            elif hardware:
                 wall = time.time()
                 try: previous = float(meta.get('attempted_at', 0))
                 except (ValueError, TypeError): previous = 0
@@ -176,10 +245,15 @@ def main(argv=None):
             if args.preview:
                 print('Wrote', out, '(480×800; actual six-colour render; no GPIO touched)')
                 return 2 if snap.get('offline') else 0
+            # Recheck after fetching as well: a clock correction during a scan
+            # must not let a push or scheduled frame escape the persisted guard.
+            if (hourly or push) and not wait_for_cooldown(meta, meta_path, cfg, stop, push=push): break
             # Persist BEFORE imports/initialisation, so even setup failures or
             # restarts cannot hammer the panel. Existing v1 hardware is unchanged.
-            meta.update({'attempted_at': time.time(), 'attempt_version': __version__})
+            meta.update({'attempted_at': time.time(), 'attempt_version': __version__,
+                         'attempt_kind': 'push' if push else 'scheduled'})
             atomic_json(meta_path, meta)
+            first_frame = False
             from .hardware import display
             LOG.info('Refreshing panel (%s); full refresh flashing is expected', layout)
             display(frame, cfg)
@@ -187,8 +261,10 @@ def main(argv=None):
             meta.update({'success_at': time.time(), 'cycle': cycle, 'snapshot_at': snap['as_of'],
                          'version': __version__, 'frame_hash': hashlib.sha256(frame.tobytes()).hexdigest()})
             atomic_json(meta_path, meta)
-            LOG.info('Panel asleep. Next update in approximately one hour (%ss cadence).',
-                     cfg.refresh_seconds)
+            if hourly:
+                LOG.info('Panel asleep. Next report is scheduled on the hour.')
+            else:
+                LOG.info('Panel asleep. Refresh cadence: %ss.', cfg.refresh_seconds)
             # Queue only after a real frame succeeds: preview/check/demo never spend.
             # This is metadata-only; a separate worker owns HTTPS and image decoding.
             if not args.demo:
@@ -198,7 +274,7 @@ def main(argv=None):
                     if added: LOG.info('Queued %s missing bird illustrations (background worker)', added)
                 except (OSError, ValueError, RuntimeError) as exc:
                     LOG.warning('Artwork queue unavailable (%s); dashboard continues', type(exc).__name__)
-            if args.once: return 2 if snap.get('offline') else 0
+            if single_frame: return 2 if snap.get('offline') else 0
         return 0
     finally:
         if lockfd is not None: os.close(lockfd)

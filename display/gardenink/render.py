@@ -12,6 +12,8 @@ from .palette import COLOURS, RESAMPLE, quantise
 BLACK, WHITE, YELLOW, RED, BLUE, GREEN = COLOURS
 WIDTH, HEIGHT = 480, 800
 ASSETS = ROOT / 'assets'
+# Ordered coverage for the selected strong wash: fill ~70% of eligible white gaps.
+WASH_PATTERN = ((0, 8, 2, 10), (12, 4, 14, 6), (3, 11, 1, 9), (15, 7, 13, 5))
 
 @lru_cache(maxsize=128)
 def font(size: int, style: str = 'sans'):
@@ -103,7 +105,8 @@ def _load_art(path: str, width: int, height: int, mode: str):
     else:
         # Keep graphite/neutral tones in black and white. A generic RGB-to-six-colour
         # Floyd quantiser makes grey feathers into red/blue confetti; replace only
-        # selected light, genuinely chromatic ink with a native spot colour instead.
+        # light, genuinely chromatic ink with a native spot colour instead. The
+        # strong wash also fills selected white gaps without changing dark detail.
         bw=ImageOps.grayscale(im).convert('1',dither=getattr(Image,'Dither',Image).FLOYDSTEINBERG)
         shades=list(bw.get_flattened_data() if hasattr(bw,'get_flattened_data') else bw.getdata())
         him=im.convert('HSV')
@@ -111,7 +114,9 @@ def _load_art(path: str, width: int, height: int, mode: str):
         pixels=[]
         for i,(shade,(h,s,v)) in enumerate(zip(shades,hsv)):
             colour=WHITE if shade else BLACK
-            if not shade and s>=68 and v>=135:
+            x,y=i%im.width,i//im.width
+            wash_gap = (WASH_PATTERN[y%4][x%4]+0.5)/16 < 0.70
+            if (not shade or wash_gap) and s>=68 and v>=135:
                 if h<20:
                     colour=YELLOW if h>=10 and (i%im.width+ i//im.width)%4==0 else RED
                 elif h<48: colour=YELLOW

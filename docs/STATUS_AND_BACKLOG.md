@@ -7,7 +7,7 @@ Garden Ink 2.1 provides an hourly, no-clock journal from a separate Open Observa
 | Area | Implemented | Remaining verification or limitation |
 |---|---|---|
 | Station client | Read-only bounded scan; today/hour aggregation; source/review filtering; partial totals | Recheck the API contract when upgrading the station |
-| Display | HAT (E) driver, persistent refresh cooldown, controller sleep, portrait no-clock layout | Long-run reliability and physical readability across lighting conditions |
+| Display | HAT (E) driver, startup/manual pushed frames, on-the-hour scheduled reports, persistent refresh guard, strong colour wash, controller sleep, portrait no-clock layout | Long-run reliability and physical readability across lighting conditions |
 | Services | Display and optional artwork units; unit validation before installation | Confirm unattended startup/recovery on the deployed Pi |
 | Pi artwork worker | Disabled by default; up to two workers; durable request reservations and uncertainty handling | Paid operation and low-memory behaviour require a separately authorised device trial |
 | Workstation studio | Serial generation, recovery, review, approval and export | Existing paid collection must be imported; parallel generation is not implemented |
@@ -17,7 +17,7 @@ Garden Ink 2.1 provides an hourly, no-clock journal from a separate Open Observa
 ## Improvement priorities
 
 1. **Content quality:** clearer summaries while preserving acoustic identification and coverage semantics.
-2. **Refresh methodology:** assess cadence and scheduling while retaining persisted hardware cooldown, DST and midnight correctness.
+2. **Refresh methodology:** verify on-the-hour scheduling on the deployed Pi, retaining persisted hardware cooldown, DST and midnight correctness.
 3. **Readability:** inspect actual 480 × 800 renders and physical pigment, especially small labels and long species names.
 4. **Power consumption:** measure the complete device. Controller sleep does not suspend the Pi; no battery-life claim is established.
 5. **Art style:** complete a consistent robin-reference collection, with human review of anatomy and species markings.
