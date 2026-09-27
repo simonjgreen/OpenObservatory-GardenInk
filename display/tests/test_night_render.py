@@ -155,7 +155,9 @@ class NightRenderTests(unittest.TestCase):
             self.assertLessEqual(previous[1]+3, following[0])
         for xy, value, kwargs, size in labels:
             if xy[1] < 732:
-                self.assertGreaterEqual(kwargs['width'], font(10).getlength(value))
+                # Native-sized glyphs are no longer sent through width fitting.
+                self.assertGreaterEqual(size[1], 10)
+                self.assertLessEqual(xy[0]+size[0]//2, 457)
 
     def test_hourly_gap_does_not_join_baseline_across_missing_interval(self):
         from gardenink.night_render import hourly_chart

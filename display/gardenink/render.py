@@ -220,7 +220,7 @@ def illustrated_species(snap, layout):
         from .night_render import featured_owl, GUIDE_OWL
         return [featured_owl(snap.get('night') or {}) or GUIDE_OWL]
     if layout == 'gallery':
-        return snap['today']['species'][:6]
+        return gallery_cards(snap)[0]
     feature, daily = selections(snap)
     daily, _ = daily_cards(daily, snap)
     return ([feature] if feature else []) + daily
@@ -451,31 +451,50 @@ def hourly_journal(p, snap, cfg, z, top=215):
         write_lines(p,(x,y),latin)
 
 
+def gallery_cards(snap):
+    """Reserve readable metadata before art; share selection with the watcher."""
+    birds = snap['today']['species']
+    for capacity in (6, 4, 2, 1):
+        chosen = birds[:capacity]
+        columns = min(2,len(chosen)) or 1
+        rows = max(1,math.ceil(len(chosen)/columns))
+        width = 205 if columns == 2 else 432
+        # Two timestamp lines cover date/timezone changes. A two-line report
+        # heading sets the tightest native grid top (255 px).
+        if all(len(text_lines(short_name(b), width, 18))*22+36+14 <= (666-255)//rows
+               for b in chosen):
+            return chosen, columns, rows
+    return birds[:1], 1, 1
+
+
 def today_gallery(p, snap, cfg, z, top=215):
     if snap.get('offline') and not snap.get('cached'):
         garden_vignette(p,128,top+20,224,132)
         readable(p,(24,420),'Today’s observations unavailable',size=21)
         return
-    birds = snap['today']['species'][:6]
+    birds, columns, rows = gallery_cards(snap)
     if not birds:
         garden_vignette(p,128,top+20,224,132)
         p.text((240,420),'No qualifying bird IDs today',21,align='centre')
         return
-    height = (666-top)//3
+    p.text((24,top),'%d of %d species shown' % (len(birds),snap['today']['species_count']),14)
+    top += 24
+    height = (666-top)//rows
+    width = 205 if columns == 2 else 432
     for i,bird in enumerate(birds):
-        x, y = 24+(i%2)*224, top+(i//2)*height
-        names = text_lines(short_name(bird),205,18)
-        times = text_lines('Heard '+bird_time(bird['last'],snap['as_of'],z),205)
+        x, y = 24+(i%columns)*224, top+(i//columns)*height
+        names = text_lines(short_name(bird),width,18)
+        times = text_lines('Heard '+bird_time(bird['last'],snap['as_of'],z),width)
         text_height = len(names)*22+len(times)*18
         art_height = max(0,height-text_height-14)
         if art_height >= 25 and artwork_path(bird):
-            art(p,bird,(x+7,y,194,art_height),cfg.artwork_mode)
+            art(p,bird,(x+7,y,width-11,art_height),cfg.artwork_mode)
         elif art_height >= 50:
             p.sprig(x+100,y+art_height-8,.6)
         end = write_lines(p,(x,y+art_height+7),names,18)
         write_lines(p,(x,end),times)
-        if i<4: p.rule(y+height-3,x,x+207)
-    p.d.line((240,top,240,665),fill=BLACK,width=1)
+        if i//columns < rows-1: p.rule(y+height-3,x,x+width)
+    if columns == 2: p.d.line((240,top,240,665),fill=BLACK,width=1)
 
 
 def footer_note(snap):
