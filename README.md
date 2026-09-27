@@ -17,6 +17,7 @@ Credit to [arnegiacomo](https://github.com/arnegiacomo) and Fugleramme for the e
 ## What it does
 
 - Shows the latest qualifying identification from the last hour, alongside three other frequent species heard today, with wider cards for unusually long names.
+- Uses the six-species Gallery for the 10am and 2pm local-time editions, returning to Journal at 11am and 3pm. Night mode takes priority; `gallery_hours` configures these daily slots.
 - Refreshes on startup, then starts scheduled updates on the hour. `./service.sh refresh` requests an update between scheduled reports; startup and manual pushes retain a saved three-minute minimum between panel attempts. It shows the date and when things were heard; a clock that is wrong for most of the hour would be fairly unhelpful.
 - Counts qualifying acoustic detections, with the station's review decisions and source filtering respected. Today starts at local midnight, including when the clocks change. If a scan is incomplete, the totals say so.
 - Switches to a three-page bat and owl carousel after sunset when daytime bird detections fall and sustained bat activity or an owl is heard. It keeps the night edition until sunrise, with an owl portrait and bat illustration throughout. See [night mode](docs/design/NIGHT_MODE.md).

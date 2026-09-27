@@ -1,7 +1,7 @@
 from __future__ import annotations
 import json
 import os
-from dataclasses import asdict, dataclass, fields
+from dataclasses import asdict, dataclass, field, fields
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 from zoneinfo import ZoneInfo
@@ -20,6 +20,7 @@ class Settings:
     heartbeat_seconds: int = 3600  # legacy compatibility
     layout: str = "journal"
     rotate_layouts: bool = False
+    gallery_hours: list[int] = field(default_factory=lambda: [10, 14])
     rotation: int = 90
     artwork_mode: str = "colour"
     page_size: int = 500
@@ -79,6 +80,10 @@ class Settings:
             raise ValueError('artwork_mode must be colour or ink')
         if not isinstance(self.rotate_layouts, bool):
             raise ValueError('rotate_layouts must be true or false')
+        if (not isinstance(self.gallery_hours, list) or
+                any(type(hour) is not int or not 0 <= hour <= 23 for hour in self.gallery_hours) or
+                len(set(self.gallery_hours)) != len(self.gallery_hours)):
+            raise ValueError('gallery_hours must be a list of distinct local hours from 0 to 23')
         if not isinstance(self.night_mode, bool):
             raise ValueError('night_mode must be true or false')
         import math

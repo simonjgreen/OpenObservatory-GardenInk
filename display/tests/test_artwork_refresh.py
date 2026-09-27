@@ -1,5 +1,6 @@
 """Exercise artwork arrivals through the real scheduler, lookup and renderer."""
 import copy
+from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
@@ -12,6 +13,7 @@ from PIL import Image, ImageDraw
 from gardenink.app import main
 from gardenink.config import Settings
 from gardenink.demo import demo_snapshot
+from gardenink.model import timestamp
 from test_schedule import Clock
 
 
@@ -85,6 +87,7 @@ class ArtworkRefreshTests(unittest.TestCase):
                  patch('gardenink.app.Client.fetch', side_effect=fetch), \
                  patch('gardenink.app.threading.Event', return_value=clock), \
                  patch('gardenink.app.time.time', side_effect=lambda:clock.wall), \
+                 patch('gardenink.app.utcnow', side_effect=lambda:datetime.fromtimestamp(clock.wall, timezone.utc)), \
                  patch('gardenink.app.time.monotonic', side_effect=lambda:elapsed[0]), \
                  patch('gardenink.app.signal.signal'), \
                  patch('gardenink.app.lock_display', return_value=None), \
@@ -135,6 +138,16 @@ class ArtworkRefreshTests(unittest.TestCase):
         _, frames, layouts, _ = self.run_arrival([(1080,'Tyto alba','images')], rotate=True)
         self.assertEqual(len(frames), 3)
         self.assertEqual(layouts, ['journal','journal','gallery'])
+
+    def test_scheduled_gallery_keeps_page_for_art_then_returns_to_journal(self):
+        start = timestamp('2026-09-27T09:00:00Z').timestamp()  # 10am BST
+        fetches, frames, layouts, meta = self.run_arrival(
+            [(start+300, 'Cettia cetti', 'images')], start=start, stop_at=start+3650)
+        self.assertEqual(fetches, [start, start+3600])
+        self.assertEqual(layouts, ['gallery', 'gallery', 'journal'])
+        self.assertEqual(len(frames), 3)
+        self.assertEqual(meta['cycle'], 3)
+        self.assertEqual(meta['edition'], 2)
 
     def test_hourly_report_wins_over_art_waiting_for_guard(self):
         fetches, frames, _, _ = self.run_arrival([(3570,'Tyto alba','images')],

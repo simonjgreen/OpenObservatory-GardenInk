@@ -2,6 +2,8 @@
 
 ## Current hierarchy
 
+Daytime Gallery is scheduled for the 10am and 2pm local editions, remaining until the next hourly report (11am and 3pm). These are user-selected times, not an activity-based trigger or a claim that measured activity is lowest then. The ordinary Journal and after-dark selection apply outside those slots; night mode retains priority. The configurable `gallery_hours` defaults to `[10, 14]`.
+
 1. Quiet `OPEN OBSERVATORY` identifier, large serif `The garden`, report date and botanical motif.
 2. Restrained health note. A genuine pause/offline/non-live state must remain understandable, not masked as a quiet garden.
 3. `HEARD IN THE LAST HOUR`, with a small historical report interval. Large illustration to the left, common/scientific names and explicitly labelled last-heard information to the right.

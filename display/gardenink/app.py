@@ -165,7 +165,12 @@ def choose_report(snap, cfg, meta, edition, now):
         # A damaged/expired cache cannot supply a report for a saved latch.
         if (snap.get('night') or {}).get('evening_date') == proposed.get('evening_date'):
             return layout, proposed
-    return (('journal', 'gallery')[edition % 2] if cfg.rotate_layouts else cfg.layout), proposed
+    if cfg.rotate_layouts:
+        return ('journal', 'gallery')[edition % 2], proposed
+    # Use the current local edition, not the date/time on a retained offline report.
+    if now.astimezone(ZoneInfo(cfg.timezone)).hour in cfg.gallery_hours:
+        return 'gallery', proposed
+    return cfg.layout, proposed
 
 
 def check_report(snap: dict, cfg) -> dict:
@@ -220,7 +225,9 @@ def main(argv=None):
         print('Saved configuration to', args.config)
         return 0
     if args.url: cfg.base_url = args.url
-    if args.layout: cfg.layout = args.layout
+    if args.layout:
+        cfg.layout = args.layout
+        cfg.gallery_hours = []  # An explicit one-run layout bypasses the daily slots.
     if args.rotation: cfg.rotation = args.rotation
     cfg.validate(require_url=not args.demo)
     state = Path(os.environ.get('GARDEN_INK_STATE_DIR', str(ROOT/'state'))).expanduser()
