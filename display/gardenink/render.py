@@ -41,11 +41,16 @@ class Page:
             while f.getlength(value) > width and len(value) > 1:
                 value = value[:-2].rstrip('…') + '…'
         b = f.getbbox(value)
-        w, h = max(1, b[2]-b[0]), max(1, b[3]-b[1])
-        mask = Image.new('L', (w,h), 0)
-        ImageDraw.Draw(mask).text((-b[0],-b[1]),value,font=f,fill=255)
-        # Crisp native-colour type, not noisy six-colour text dithering.
-        mask = mask.point(lambda p: 255 if p >= 112 else 0)
+        # Render monochrome glyphs directly (selected physical trial E).
+        # Padding retains hinted pixels beyond the antialiased font bounds.
+        mask = Image.new('L', (max(1,b[2]-b[0])+8,max(1,b[3]-b[1])+8), 0)
+        draw = ImageDraw.Draw(mask)
+        draw.fontmode = '1'
+        draw.text((4-b[0],4-b[1]),value,font=f,fill=255)
+        ink = mask.getbbox()
+        if ink:
+            mask = mask.crop(ink)
+        w,h = mask.size
         x,y = xy
         if align == 'right': x -= w
         if align == 'centre': x -= w//2
@@ -206,7 +211,7 @@ def selections(snap):
     daily = sorted(snap['today']['species'],
                    key=lambda b: (-b['count'], b['scientific_name'].casefold()))
     others = [b for b in daily if b['scientific_name'].casefold() != key]
-    return feature, others[:4]
+    return feature, others[:3]
 
 
 def illustrated_species(snap, layout):
@@ -214,6 +219,7 @@ def illustrated_species(snap, layout):
     if layout == 'gallery':
         return snap['today']['species'][:6]
     feature, daily = selections(snap)
+    daily, _ = daily_cards(daily, snap)
     return ([feature] if feature else []) + daily
 
 
@@ -251,157 +257,251 @@ def garden_vignette(p, x, y, w, h):
     p.im.paste(im.resize((w,h),RESAMPLE.LANCZOS).convert('1').convert('RGB'),(x,y))
 
 
+def text_lines(value, width, size=14, style='sans'):
+    """Wrap at native size; break an overlong token instead of shrinking it."""
+    lines, line = [], ''
+    for word in str(value).split():
+        trial = (line+' '+word).strip()
+        if line and font(size, style).getlength(trial) > width-2:
+            lines.append(line)
+            line = ''
+        while font(size, style).getlength(word) > width-2:
+            end = 1
+            while end < len(word) and font(size, style).getlength(word[:end+1]) <= width-2:
+                end += 1
+            lines.append(word[:end])
+            word = word[end:]
+        line = (line+' '+word).strip()
+    if line: lines.append(line)
+    return lines
+
+
+def write_lines(p, xy, lines, size=14, style='sans', leading=4):
+    y = xy[1]
+    for line in lines:
+        p.text((xy[0], y), line, size, style)
+        y += size+leading
+    return y
+
+
+def readable(p, xy, value, width=432, size=14, style='sans'):
+    return write_lines(p, xy, text_lines(value, width, size, style), size, style)
+
+
+def daily_cards(daily, snap):
+    """Default to three; give exceptional long metadata wider cards.
+
+    Reserve two timestamp lines independent of timezone, so the same selection
+    is used by the artwork watcher and the renderer.
+    """
+    for columns in (3, 2, 1):
+        width = 432//columns-12
+        chosen = daily[:columns]
+        if all(len(text_lines(short_name(b),width,18))*22 + 36 +
+               len(text_lines(b['scientific_name'],width))*18 <= 168 for b in chosen):
+            return chosen, columns
+    return daily[:1], 1
+
+
 def status_line(p, snap):
     state, _ = status_for(snap)
-    labels = {'ok':'Recording OK when sampled', 'demo':'DEMO · sample detections',
+    labels = {'ok':'Recording OK when sampled', 'demo':'SAMPLE · invented observations',
               'offline':'OFFLINE · cached edition' if snap.get('cached') else 'OFFLINE · no station data',
               'paused':'Recording paused', 'not_live':'Not live microphone audio',
               'capture_error':'Capture needs attention', 'clock':'Station / Pi clock mismatch',
               'degraded':'Station needs attention', 'unknown':'Capture status unavailable'}
     colour = GREEN if state=='ok' else YELLOW if state in ('demo','paused','unknown') else RED
-    p.d.ellipse((25,111,31,117),fill=colour,outline=BLACK)
-    p.text((39,110),labels[state],10,'bold' if state not in ('ok','demo') else 'sans',width=280)
-    p.text((456,110),'Hourly field notes',10,'italic',align='right',width=128)
+    p.d.ellipse((25,130,31,136), fill=colour, outline=BLACK)
+    p.text((40,127), labels[state], 14, 'bold' if state not in ('ok','demo') else 'sans')
 
 
 def render(snapshot: dict, settings, layout=None) -> Image.Image:
-    # New art is installed atomically by another process; do not retain stale PNGs.
     _load_art.cache_clear()
     manifest.cache_clear()
     p = Page()
     z = ZoneInfo(settings.timezone)
     now = timestamp(snapshot['as_of']).astimezone(z)
-    p.tracked((25,19),'OPEN OBSERVATORY',9,1.6)
-    p.text((24,42),settings.title,39,'serif',width=379)
-    p.text((25,85),now.strftime('%A, %-d %B %Y'),11,width=321)
-    p.sprig(443,82,0.78)
-    p.rule(101)
+    identifier = 'SAMPLE · OPEN OBSERVATORY' if snapshot.get('demo') or snapshot.get('fixture') else 'OPEN OBSERVATORY'
+    p.text((24,18), identifier, 14)
+    p.text((24,46), settings.title, 34, 'serif', width=379)
+    p.text((24,89), now.strftime('%A, %-d %B %Y'), 14)
+    p.sprig(443,96,.7)
+    p.rule(113)
     status_line(p,snapshot)
-    if (layout or settings.layout) == 'gallery':
-        today_gallery(p,snapshot,settings,z)
+    gallery = (layout or settings.layout) == 'gallery'
+    p.text((24,159), 'Heard today · since local midnight' if gallery else 'Heard in the last hour', 16, 'bold')
+    period = report_period(snapshot['last_hour'],z)
+    if gallery: period = period.replace('Report covers ', 'Report-hour totals · ', 1)
+    end = readable(p,(24,185),period)
+    top = max(215,end+12)
+    if gallery:
+        today_gallery(p,snapshot,settings,z,top)
     else:
-        hourly_journal(p,snapshot,settings,z)
+        hourly_journal(p,snapshot,settings,z,top)
     footer(p,snapshot,settings,z)
     return quantise(p.im,dither=False).convert('RGB')
 
 
-def hourly_journal(p, snap, cfg, z):
+def hourly_journal(p, snap, cfg, z, top=215):
     today, hour = snap['today'], snap['last_hour']
     main, daily = selections(snap)
-    p.tracked((25,139),'HEARD IN THE LAST HOUR',10,1.2)
-    p.text((25,158),report_period(hour,z),10,'sans',width=430)
+    daily, columns = daily_cards(daily, snap)
     if main:
-        path = artwork_path(main)
-        if path:
-            art(p,main,(24,181,232,210),cfg.artwork_mode)
+        count = number({'count': main['count'], 'incomplete': hour['incomplete']}, 'count')
+        count_text = count+' '+('detection' if count=='1' else 'detections')+' this hour'
+        heard = 'Heard at '+bird_time(main['last'],snap['as_of'],z)
+        width, x, size = 173, 283, 24
+        name = text_lines(short_name(main),width,size)
+        latin = text_lines(main['scientific_name'],width)
+        times = text_lines(heard,width)
+        counts = text_lines(count_text,width)
+        def positions():
+            latin_y = top+5+len(name)*(size+4)+12
+            heard_y = max(top+110,latin_y+len(latin)*18+18)
+            count_y = heard_y+len(times)*18+8
+            return latin_y, heard_y, count_y
+        latin_y, heard_y, count_y = positions()
+        if count_y+len(counts)*18 > 399:
+            size = 18
+            name = text_lines(short_name(main),width,size)
+            latin_y = top+5+len(name)*22+8
+            heard_y = latin_y+len(latin)*18+8
+            count_y = heard_y+len(times)*18+6
+        if count_y+len(counts)*18 > 399:
+            # Rare long local labels get the art's width, not tiny type.
+            x, width = 24, 432
+            name = text_lines(short_name(main),width,size)
+            latin = text_lines(main['scientific_name'],width)
+            times = text_lines(heard,width)
+            counts = text_lines(count_text,width)
+            latin_y = top+5+len(name)*22+8
+            heard_y = latin_y+len(latin)*18+8
+            count_y = heard_y+len(times)*18+6
         else:
-            # An honest botanical accent, not a lookalike bird or giant missing-image error.
-            p.sprig(116,331,1.7)
-            p.sprig(153,343,1.1)
-            p.text((139,367),'Illustration not yet available',10,align='centre',width=227)
-        p.d.line((267,185,267,390),fill=BLACK,width=1)
-        name = short_name(main)
-        y = paragraph(p,(283,191),name,24,171,'serif',max_lines=3,leading=5)
-        y = paragraph(p,(283,y+12),main['scientific_name'],12,171,'italic',max_lines=2,leading=4)
-        y = max(303,y+18)
-        p.text((283,y),'Heard at '+bird_time(main['last'],snap['as_of'],z),12,'bold',width=171)
-        count = format(main['count'],',')+('+' if hour['incomplete'] else '')
-        paragraph(p,(283,y+25),count+' '+('detection' if count=='1' else 'detections')+' this hour',
-                  12,171,max_lines=2,leading=4)
+            if artwork_path(main):
+                art(p,main,(24,top,228,388-top),cfg.artwork_mode)
+            else:
+                p.sprig(125,top+105,1.25)
+                readable(p,(24,top+130),'Illustration not yet available',228)
+            p.d.line((266,top+1,266,390),fill=BLACK,width=1)
+        write_lines(p,(x,top+5),name,size)
+        write_lines(p,(x,latin_y),latin)
+        write_lines(p,(x,heard_y),times)
+        write_lines(p,(x,count_y),counts)
         others = hour['species'][1:]
         if others:
-            names = ' · '.join(short_name(b) for b in others[:3])
-            if len(others)>3: names += ' · +%d more' % (len(others)-3)
-            p.text((25,407),'Also this hour',10,'bold')
-            p.text((25,424),names,12,'serif',width=431)
+            shown = min(3,len(others))
+            while True:
+                names = ' · '.join(short_name(b) for b in others[:shown])
+                if shown < len(others): names += (' · ' if names else '')+'+%d more' % (len(others)-shown)
+                if font(14).getlength(names) <= 430: break
+                shown -= 1
+            p.text((24,404),'Also this hour',14,'bold')
+            p.text((24,427),names,14)
         else:
-            p.text((25,416),'One species identified in this hour'+(' so far' if hour['incomplete'] else ''),
-                   12,'italic',width=431)
+            p.text((24,416),'One species identified in this hour'+(' so far' if hour['incomplete'] else ''),14)
     else:
         state = status_for(snap)[0]
         if snap.get('offline') and not snap.get('cached'):
-            heading = 'Waiting for the station'
-            detail = 'No current observations are available.'
+            heading, detail = 'Waiting for the station', 'No current observations are available.'
         elif hour['incomplete']:
-            heading = 'This hour is incomplete'
-            detail = 'No qualifying IDs in the records received.'
+            heading, detail = 'This hour is incomplete', 'No qualifying IDs in the records received.'
         elif state in ('paused','not_live','capture_error','unknown','degraded','clock'):
-            heading = 'No recent identifications'
-            detail = 'Check the recording status above.'
+            heading, detail = 'No recent identifications', 'Check the recording status above.'
         else:
             heading = 'No bird IDs this hour'
             detail = 'Earlier observations remain below.' if today['species'] else 'A new page in the garden journal.'
-        garden_vignette(p,137,183,204,116)
-        p.text((240,326),heading,24,'serif',align='centre',width=426)
-        p.text((240,366),detail,12,align='centre',width=426)
-        p.text((240,407),'No detection is not proof of silence.',10,'italic',align='centre',width=426)
-    p.rule(448)
-    p.tracked((25,465),'HEARD TODAY',10,1.4)
-    p.text((456,466),'Other frequent callers',10,'italic',align='right',width=226)
+        garden_vignette(p,137,top,204,94)
+        p.text((240,326),heading,22,align='centre',width=432)
+        p.text((240,366),detail,14,align='centre')
+        p.text((240,416),'No detection is not proof of silence.',14,align='centre')
+    p.rule(453)
+    label = 'Heard today · %d frequent species shown' % len(daily) if daily else 'Heard today'
+    p.text((24,467),label,14,'bold')
     if not daily:
-        if today['species']:
-            msg = 'Only the featured species recorded today'
-        elif snap.get('offline') and not snap.get('cached'):
-            msg = 'Today’s observations are unavailable'
-        else:
-            msg = 'No qualifying bird IDs yet today'
-        p.text((240,548),msg,19,'serif',align='centre',width=420)
-        p.text((240,585),'Today begins at local midnight.',11,'italic',align='centre')
+        if today['species']: msg = 'Only the featured species recorded today'
+        elif snap.get('offline') and not snap.get('cached'): msg = 'Today’s observations are unavailable'
+        else: msg = 'No qualifying bird IDs yet today'
+        readable(p,(24,548),msg,size=18)
+        p.text((24,604),'Today begins at local midnight.',14)
         return
     for i, bird in enumerate(daily):
-        x = 24 + i*110
-        if i: p.d.line((x-5,498,x-5,673),fill=BLACK,width=1)
-        if artwork_path(bird):
-            art(p,bird,(x,493,102,100),cfg.artwork_mode)
-        else:
-            p.sprig(x+43,566,0.75)
-        paragraph(p,(x,601),short_name(bird),13,102,'serif',max_lines=2,leading=2)
-        paragraph(p,(x,635),bird['scientific_name'],10,102,'italic',max_lines=2,leading=1)
-        p.text((x,664),'Heard '+bird_time(bird['last'],snap['as_of'],z),10,'sans',width=100)
-        # Counts are shown in the main total; timestamps make this row glanceable.
+        step = 432//columns
+        x, width = 24+i*step, step-12
+        if i: p.d.line((x-6,494,x-6,661),fill=BLACK,width=1)
+        names = text_lines(short_name(bird),width,18)
+        times = text_lines('Heard '+bird_time(bird['last'],snap['as_of'],z),width)
+        latin = text_lines(bird['scientific_name'],width)
+        # Grow the text area upwards for wraps, reducing illustration space.
+        height = len(names)*22 + (len(times)+len(latin))*18
+        y = min(577,660-height+4)
+        art_height = min(77,max(0,y-491-8))
+        if art_height >= 25 and artwork_path(bird):
+            art(p,bird,(x,491,width,art_height),cfg.artwork_mode)
+        elif art_height >= 50:
+            p.sprig(x+width//2,491+art_height-8,.6)
+        y = write_lines(p,(x,y),names,18)
+        y = write_lines(p,(x,y+3),times)
+        write_lines(p,(x,y),latin)
 
 
-def today_gallery(p, snap, cfg, z):
-    p.tracked((25,139),'HEARD TODAY',10,1.3)
-    p.text((456,140),'Since local midnight',10,'italic',align='right')
+def today_gallery(p, snap, cfg, z, top=215):
+    if snap.get('offline') and not snap.get('cached'):
+        garden_vignette(p,128,top+20,224,132)
+        readable(p,(24,420),'Today’s observations unavailable',size=21)
+        return
     birds = snap['today']['species'][:6]
     if not birds:
-        garden_vignette(p,128,241,224,132)
-        p.text((240,420),'No qualifying bird IDs today',21,'serif',align='centre',width=425)
+        garden_vignette(p,128,top+20,224,132)
+        p.text((240,420),'No qualifying bird IDs today',21,align='centre')
         return
+    height = (666-top)//3
     for i,bird in enumerate(birds):
-        x=24+(i%2)*224; y=163+(i//2)*173
-        art(p,bird,(x+7,y+1,194,103),cfg.artwork_mode)
-        p.text((x+104,y+111),short_name(bird),18,'serif',align='centre',width=205)
-        p.text((x+104,y+139),'Heard '+bird_time(bird['last'],snap['as_of'],z),11,align='centre',width=203)
-        if i<4: p.rule(y+164,x,x+207)
-    p.d.line((240,176,240,672),fill=BLACK,width=1)
+        x, y = 24+(i%2)*224, top+(i//2)*height
+        names = text_lines(short_name(bird),205,18)
+        times = text_lines('Heard '+bird_time(bird['last'],snap['as_of'],z),205)
+        text_height = len(names)*22+len(times)*18
+        art_height = max(0,height-text_height-14)
+        if art_height >= 25 and artwork_path(bird):
+            art(p,bird,(x+7,y,194,art_height),cfg.artwork_mode)
+        elif art_height >= 50:
+            p.sprig(x+100,y+art_height-8,.6)
+        end = write_lines(p,(x,y+art_height+7),names,18)
+        write_lines(p,(x,end),times)
+        if i<4: p.rule(y+height-3,x,x+207)
+    p.d.line((240,top,240,665),fill=BLACK,width=1)
+
+
+def footer_note(snap):
+    """Two readable lines; retain independent availability/count qualifications."""
+    cached = snap.get('offline') and snap.get('cached')
+    paused = ((snap.get('health') or {}).get('pause') or {}).get('active')
+    prefix = ('CACHED · ' if cached else '')+('PAUSED · ' if paused else '')
+    if snap['today']['incomplete'] or snap['last_hour']['incomplete']:
+        return prefix+'+ means at least\nIncomplete scan · Acoustic IDs, not birds'
+    if cached or paused:
+        return prefix+'Totals end at report time\nAcoustic IDs, not individual birds'
+    if not snap['last_hour']['record_count']:
+        return 'No IDs in report hour · Not proof of silence\nAcoustic IDs, not individual birds'
+    return 'Acoustic IDs, not individual birds'
 
 
 def footer(p, snap, cfg, z):
-    today, hour = snap['today'], snap['last_hour']
-    p.rule(688)
+    p.rule(672)
     if snap.get('offline') and not snap.get('cached'):
-        p.text((240,714),'No current station data',22,'serif',align='centre',width=426)
-    else:
-        for x,window,key,l1,l2,width in (
-            (24,today,'species_count','species','today',94),
-            (135,today,'record_count','detections','today',119),
-            (269,hour,'species_count','species','last hour',85),
-        ):
-            p.text((x,703),number(window,key),29,'serif',width=width)
-            p.text((x,741),l1,11,width=width)
-            p.text((x,756),l2,11,width=width)
-        p.d.line((123,704,123,767),fill=BLACK,width=1)
-        p.d.line((258,704,258,767),fill=BLACK,width=1)
-        garden_vignette(p,365,703,90,52)
-        p.text((411,762),'Small moments.',8,'italic',align='centre',width=98)
-    if snap.get('demo') or snap.get('fixture'):
-        note='DEMO · invented records, not your garden'
-    elif snap.get('offline') and snap.get('cached'):
-        note='CACHED · both windows end at the printed report period'
-    elif today['incomplete'] or hour['incomplete']:
-        note='+ means at least · scan incomplete · counts are detections'
-    else:
-        note='Acoustic IDs, not visits · a new report each hour'
-    p.text((240,784),note,9,align='centre',width=449)
+        p.text((240,704),'No current station data',22,align='centre')
+        p.text((240,745),'Report totals are unavailable.',14,align='centre')
+        p.text((240,779),'No cached report · Waiting for the station',14,align='centre')
+        return
+    for offset,window,title in ((0,snap['today'],'Today'),(216,snap['last_hour'],'Report hour')):
+        p.text((132+offset,685),title,14,align='centre')
+        for x,key,label in ((73,'species_count','species'),(181,'record_count','detections')):
+            # Extremely large totals wrap within their cell at a readable size.
+            value = number(window,key)
+            size = 28 if font(28).getlength(value) <= 98 else 18
+            p.text((x+offset,710),value,size,align='centre',width=98)
+            p.text((x+offset,743),label,14,align='centre')
+    p.d.line((240,684,240,757),fill=BLACK,width=1)
+    lines = footer_note(snap).split('\n')
+    for i,line in enumerate(lines):
+        p.text((240,779-(len(lines)-1-i)*18),line,14,align='centre')

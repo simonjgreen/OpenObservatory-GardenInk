@@ -7,6 +7,7 @@
 | [Architecture](ARCHITECTURE.md) | Processes, modules, time/counting rules and persistence |
 | [API contract](../display/docs/API_CONTRACT.md) | Required Open Observatory endpoints and filtering semantics |
 | [Visual specification](design/VISUAL_SPEC.md) | Layout, readability and artwork direction |
+| [Readability rules and trial](design/READABILITY.md) | Selected typography, physical comparisons and formatting rules |
 | [Mechanical guide](design/MECHANICAL.md) | CAD, wiring, printing and qualification limits |
 | [Deployment](operations/DEPLOYMENT.md) | Fresh setup, upgrades and service diagnostics |
 | [Local recovery](operations/LOCAL_RECOVERY.md) | Preserve and import artwork and device state |

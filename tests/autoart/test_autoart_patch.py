@@ -304,7 +304,8 @@ class LayoutTests(unittest.TestCase):
         with patch.object(r.Page,'text',new=record):r.render(snap,Settings())
         self.assertFalse(any('SNAPSHOT' in text for text,size in calls))
         self.assertFalse(any('18:15' in text for text,size in calls))
-        self.assertFalse(any('pm' in text and size>13 for text,size in calls))
+        # Historical times use the selected readable body size, not clock type.
+        self.assertFalse(any('pm' in text and size>14 for text,size in calls))
         self.assertTrue(any(text=='Report covers 5.15pm to 6.15pm BST' for text,size in calls))
     def test_prose_times_not_relative_ages(self):
         self.assertEqual(r.prose_time(datetime(2026,9,25,18,15)),'6.15pm')

@@ -6,10 +6,16 @@
 2. Restrained health note. A genuine pause/offline/non-live state must remain understandable, not masked as a quiet garden.
 3. `HEARD IN THE LAST HOUR`, with a small historical report interval. Large illustration to the left, common/scientific names and explicitly labelled last-heard information to the right.
 4. Other species heard during the report hour, text when space is limited.
-5. `HEARD TODAY`: four other daily species, ordered by detection count, excluding the featured species from these cards only.
-6. Small daily/hourly totals and honest count qualification. Decorative botanical vignette is subordinate to birds.
+5. `HEARD TODAY`: three other daily species, ordered by detection count, excluding the featured species from these cards only.
+6. Two balanced footer groups, `TODAY` and `REPORT HOUR`, each showing species and acoustic detections (selected proposal B, 27 September 2026). Print the historical report interval once above the content, including date/zone qualification across midnight and DST; gallery mode labels this interval as applying to the report-hour totals. Preserve cached, paused and incomplete-count qualifications; missing station data shows unavailable totals, never zeros. Sample pages are labelled in the masthead so their count qualifications remain visible. The miniature footer vignette and “Small moments.” caption are removed; larger empty-state illustrations remain.
 
-The screen is a **480 × 800** portrait composition sent to an **800 × 480** native device after rotation. Inspect output at actual resolution. The main art review footprint is 232 × 226 pixels; the small art review footprint is 102 × 100. Scientific names are italic, common names remain readable; long labels may wrap. Do not infer the sex, age or plumage of the actual caller from a decorative illustration.
+The screen is a **480 × 800** portrait composition sent to an **800 × 480** native device after rotation. Inspect output at actual resolution. The main art review footprint is 232 × 226 pixels; the small art review footprint is 102 × 100. Common names remain readable; long labels may wrap. Daytime scientific names use upright sans-serif type following the physical readability trials. Do not infer the sex, age or plumage of the actual caller from a decorative illustration.
+
+## Selected typography target
+
+On 27 September 2026, the user selected **E: DejaVu Sans Regular rendered directly in monochrome** as the clear winner of a physical comparison against thresholded DejaVu Sans and both rendering methods with Noto Sans. Use upright scientific names in this treatment. The trial used 18 px common names and 14 px supporting text; do not shrink essential labels to retain the previous four-column grid. Retain the editorial serif masthead as a separate title role. See [readability rules and trial evidence](READABILITY.md).
+
+The user selected the three-card layout I. The daytime renderer uses 18 px daily common names and 14 px supporting text, wrapping instead of shrinking; exceptionally long labels receive two or one wider cards. The heading explicitly states how many species are shown, while aggregate totals retain every qualifying species.
 
 ## No clock, even one labelled snapshot
 

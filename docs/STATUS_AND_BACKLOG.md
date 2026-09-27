@@ -18,7 +18,7 @@ Garden Ink 2.1 provides an hourly, no-clock journal from a separate Open Observa
 
 1. **Content quality:** clearer summaries while preserving acoustic identification and coverage semantics.
 2. **Refresh methodology:** verify on-the-hour scheduling on the deployed Pi, retaining persisted hardware cooldown, DST and midnight correctness.
-3. **Readability:** inspect actual 480 × 800 renders and physical pigment, especially small labels and long species names.
+3. **Readability:** direct monochrome DejaVu Sans and three daily cards selected in physical trials; continue checking longer live labels and varied lighting.
 4. **Power consumption:** measure the complete device. Controller sleep does not suspend the Pi; no battery-life claim is established.
 5. **Art style:** complete a consistent robin-reference collection, with human review of anatomy and species markings.
 

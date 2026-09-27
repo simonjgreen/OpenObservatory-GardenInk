@@ -116,7 +116,7 @@ class ArtworkRefreshTests(unittest.TestCase):
         self.assertEqual(len(frames), 2)
 
     def test_unpictured_species_and_review_candidates_do_not_refresh(self):
-        for name, folder in [('Spinus spinus','images'), ('Tyto alba','candidates')]:
+        for name, folder in [('Grus grus','images'), ('Spinus spinus','images'), ('Tyto alba','candidates')]:
             with self.subTest(name=name, folder=folder):
                 _, frames, _, _ = self.run_arrival([(1080,name,folder)], stop_at=1600)
                 self.assertEqual(len(frames), 1)
